@@ -4,6 +4,9 @@
 
 ## 遊び方
 
+▶ **https://techgymjp.github.io/shiwake/** で遊べます。
+
+
 `index.html` をブラウザで開くだけで遊べます（ビルド不要・外部ライブラリなし）。
 
 - 「はじめる」で10問出題。「○○はどっち？」の問いに、左右どちらかのイラストをタップ
@@ -41,3 +44,8 @@
 
 1. `js/fish.js` の `art` に新しい魚の描画関数を追加（`spindle()` を使うと紡錘形の魚を簡単に描けます）
 2. `js/data.js` の `FISH_PAIRS` にペアと見分けポイントを追加
+
+## 公開（GitHub Pages）
+
+`.github/workflows/pages.yml` が push のたびにサイトをデプロイします。
+初回のみ、リポジトリの **Settings → Pages → Build and deployment → Source** を **GitHub Actions** に設定してください。
