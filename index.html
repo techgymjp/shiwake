@@ -4,19 +4,36 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>魚仕分け</title>
-  <meta name="description" content="そっくりな2匹の魚から、正しい方を選ぶ2択クイズゲーム。">
+  <meta name="description" content="寿司屋の大将の注文にこたえて、そっくりな2匹の魚から正しい方を選ぶ2択クイズゲーム。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <div class="bubbles" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <div class="sound-toggles">
+    <button type="button" class="toggle" id="tg-bgm" aria-pressed="true">♪ BGM</button>
+    <button type="button" class="toggle" id="tg-se" aria-pressed="true">🔔 効果音</button>
+    <button type="button" class="toggle" id="tg-voice" aria-pressed="true">🗣 声</button>
+  </div>
+
   <main id="app">
     <!-- タイトル -->
     <section id="screen-title" class="screen active">
+      <div class="noren" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
       <h1 class="logo"><span>魚</span><span>仕</span><span>分</span><span>け</span></h1>
-      <p class="lead">そっくりな2匹の魚。<br>正しいのはどっち？</p>
+      <div class="chef-row">
+        <div class="chef" id="title-chef"></div>
+        <p class="bubble">へい、らっしゃい！<br>おまえさんの<strong>目利き</strong>の腕前、<br>見せてもらおうか！</p>
+      </div>
       <div class="title-fish" id="title-fish"></div>
       <div class="menu">
-        <button class="btn primary" id="btn-start">はじめる（10問）</button>
-        <button class="btn" id="btn-zukan">見分け図鑑</button>
+        <button class="btn primary big" id="btn-start">板場に立つ！（10問）</button>
+        <button class="btn" id="btn-zukan">📖 見分け図鑑</button>
       </div>
       <p class="best" id="best-score"></p>
     </section>
@@ -24,14 +41,17 @@
     <!-- 問題 -->
     <section id="screen-quiz" class="screen">
       <header class="quiz-head">
-        <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
         <div class="status">
-          <span id="q-count">1 / 10</span>
-          <span id="q-score">正解 0</span>
-          <span id="q-combo" class="combo"></span>
+          <span class="chip" id="q-count">1 / 10</span>
+          <span class="chip score" id="q-score">正解 0</span>
+          <span class="chip combo" id="q-combo" hidden></span>
         </div>
+        <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
       </header>
-      <h2 class="question" id="question"></h2>
+      <div class="chef-row order">
+        <div class="chef" id="quiz-chef"></div>
+        <h2 class="bubble question" id="question"></h2>
+      </div>
       <div class="choices" id="choices"></div>
       <div class="feedback" id="feedback" hidden>
         <p class="verdict" id="verdict"></p>
@@ -42,29 +62,35 @@
 
     <!-- 結果 -->
     <section id="screen-result" class="screen">
-      <h2 class="result-title">結果発表</h2>
+      <h2 class="result-title">本日の仕分け結果</h2>
       <p class="result-score"><span id="r-score">0</span><small> / <span id="r-total">10</span></small></p>
       <p class="rank" id="r-rank"></p>
-      <p class="rank-msg" id="r-msg"></p>
+      <div class="chef-row">
+        <div class="chef" id="result-chef"></div>
+        <p class="bubble" id="r-msg"></p>
+      </div>
       <div class="review" id="review"></div>
       <div class="menu">
-        <button class="btn primary" id="btn-retry">もう一度</button>
-        <button class="btn" id="btn-home">タイトルへ</button>
+        <button class="btn primary big" id="btn-retry">もう一回！</button>
+        <button class="btn" id="btn-home">のれんへ戻る</button>
       </div>
     </section>
 
     <!-- 図鑑 -->
     <section id="screen-zukan" class="screen">
-      <h2 class="zukan-title">見分け図鑑</h2>
+      <h2 class="zukan-title">📖 見分け図鑑</h2>
       <div class="zukan" id="zukan"></div>
       <div class="menu">
-        <button class="btn" id="btn-zukan-back">タイトルへ</button>
+        <button class="btn" id="btn-zukan-back">のれんへ戻る</button>
       </div>
     </section>
   </main>
 
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+
   <script src="js/fish.js"></script>
   <script src="js/data.js"></script>
+  <script src="js/sound.js"></script>
   <script src="js/game.js"></script>
 </body>
 </html>
