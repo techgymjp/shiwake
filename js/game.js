@@ -261,6 +261,7 @@
   function renderZukan() {
     Sound.play('tap');
     $('zukan').innerHTML = FISH_PAIRS.map(pairCard).join('');
+    $('zukan-count').textContent = `全${FISH_PAIRS.length}組`;
     show('zukan');
   }
 
