@@ -1804,6 +1804,924 @@ const FishArt = (() => {
     };
   });
 
+
+  // ======================================================
+  //  追加の魚（100組対応）：寿司ネタ・市場
+  // ======================================================
+  const tunaBack = (b, o) => `
+      ${tail(b, 'moon', o.tw || 46, o.tH || 58, o.tailC)}
+      ${finUp(b, 92, 134, o.d1 || 24, o.finC, 0.15)}
+      ${finUp(b, 158, 182, o.d2 || 22, o.fin2C, 0.2, false)}
+      ${finDown(b, 166, 188, o.d2 || 20, o.fin2C, 0.2, false)}
+      ${finlets(b, 196, 252, 8, o.letC, 8)}`;
+
+  art.isaki = () => spindle({
+    label: 'イサキ',
+    body: { nx: 20, mx: 115, px: 250, h: 38, hb: 36, ph: 8, k1: 0.12, k2: 0.75, ny: 2 },
+    grad: [[0, '#4f5236'], [0.5, '#7d7f5c'], [0.75, '#c6c4a4'], [1, '#e6e3cf']],
+    back: (b) => `
+      ${tail(b, 'shallow', 44, 38, '#6b6c4c')}
+      ${finUp(b, 80, 210, 24, '#6b6c4c', 0.2)}
+      ${finDown(b, 168, 206, 16, '#8e8f6c', 0.2)}`,
+    clip: () => [78, 92, 106].map((y) => `<path d="M 40 ${y} Q 150 ${y - 3} 252 ${100 + (y - 100) * 0.3}" fill="none" stroke="#d9c98a" stroke-width="5" opacity="0.85"/>`).join(''),
+    front: (b) => `
+      ${gill(66, 100, 38)}
+      ${leafFin(76, 108, 28, 8, 12, '#8e8f6c')}
+      ${mouthLine(20, 102, 36, 106)}
+      ${eye(42, 92, 7.5, '#d8c070')}`,
+  });
+
+  art.ishimochi = () => spindle({
+    label: 'イシモチ',
+    body: { nx: 20, mx: 110, px: 248, h: 36, hb: 34, ph: 8, k1: 0.1, k2: 0.8, ny: 2 },
+    grad: [[0, '#8c949a'], [0.45, '#bcc3c8'], [1, '#f2f4f5']],
+    back: (b) => `
+      <path d="M ${b.px - 8} ${b.cy - b.ph} L ${b.px + 46} ${b.cy - 6} Q ${b.px + 48} ${b.cy} ${b.px + 46} ${b.cy + 6} L ${b.px - 8} ${b.cy + b.ph} Z" fill="#a9b1b7" stroke="${OUT}" stroke-width="1.8" stroke-linejoin="round"/>
+      ${finUp(b, 84, 120, 22, '#a0a8ae', 0.25)}
+      ${finUp(b, 124, 226, 14, '#a0a8ae', 0.05)}
+      ${finDown(b, 176, 204, 14, '#c9cfd3', 0.2, false)}`,
+    clip: () => `<path d="M 50 92 Q 150 88 250 100" fill="none" stroke="#7a838a" stroke-width="1.4"/>`,
+    front: (b) => `
+      ${gill(68, 100, 36)}
+      <ellipse cx="72" cy="80" rx="5" ry="6" fill="#1d1d1d"/>
+      ${leafFin(78, 106, 26, 8, 12, '#c9cfd3')}
+      <path d="M 20 102 Q 30 110 42 106" fill="none" stroke="${OUT}" stroke-width="1.8" stroke-linecap="round"/>
+      ${eye(42, 92, 8, '#c9d0d6')}`,
+  });
+
+  art.mebachi = () => spindle({
+    label: 'メバチ',
+    body: { nx: 16, mx: 116, px: 262, h: 56, hb: 52, ph: 6, k1: 0.1, k2: 0.86 },
+    grad: [[0, '#16294f'], [0.35, '#2f4f84'], [0.55, '#9db0c6'], [1, '#eef2f6']],
+    back: (b) => tunaBack(b, { tailC: '#1b3360', finC: '#1b3360', fin2C: '#c9a43a', letC: '#f2c230', d1: 26 }),
+    front: (b) => `
+      <path d="M 250 98 L 266 100 L 250 102 Z" fill="#16294f"/>
+      ${gill(70, 100, 48)}
+      ${leafFin(84, 104, 46, 9, 8, '#1b3360')}
+      ${mouthLine(16, 100, 38, 106)}
+      ${eye(46, 90, 12, '#c0c8d0')}`,
+  });
+
+  art.binnaga = () => spindle({
+    label: 'ビンナガ',
+    body: { nx: 18, mx: 118, px: 262, h: 46, hb: 44, ph: 6, k1: 0.14, k2: 0.8 },
+    grad: [[0, '#1f3554'], [0.4, '#4a6584'], [0.55, '#c9d3dd'], [1, '#f0f3f6']],
+    back: (b) => tunaBack(b, { tailC: '#2a4262', finC: '#2a4262', fin2C: '#d8c070', letC: '#eadfaa' })
+      + `<path d="M ${b.px + 46} ${b.cy - 58} Q ${b.px + 22} ${b.cy - 12} ${b.px + 12} ${b.cy} Q ${b.px + 22} ${b.cy + 12} ${b.px + 46} ${b.cy + 58}" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>`,
+    front: (b) => `
+      <path d="M 250 98 L 266 100 L 250 102 Z" fill="#1f3554"/>
+      ${gill(66, 100, 42)}
+      <path d="M 78 104 Q 140 86 214 96 Q 140 100 80 112 Z" fill="#2a4262" stroke="${OUT}" stroke-width="1.6" stroke-linejoin="round"/>
+      ${mouthLine(18, 100, 38, 105)}
+      ${eye(44, 93, 8.5, '#c0c8d0')}`,
+  });
+
+  art.hagatsuo = () => spindle({
+    label: 'ハガツオ',
+    body: { nx: 16, mx: 120, px: 258, h: 34, hb: 34, ph: 5, k1: 0.2, k2: 0.68 },
+    grad: [[0, '#28456e'], [0.45, '#6a88ae'], [0.55, '#e0e7ef'], [1, '#f5f7fa']],
+    back: (b) => `
+      ${tail(b, 'moon', 42, 48, '#2f4a74')}
+      ${finUp(b, 70, 150, 18, '#2f4a74', 0.1)}
+      ${finUp(b, 160, 178, 12, '#5c6f8c', 0.2, false)}
+      ${finDown(b, 166, 184, 12, '#a9b4c0', 0.2, false)}
+      ${finlets(b, 190, 250, 7, '#4f5f78', 6)}`,
+    // 背中の斜めの縞
+    clip: () => [-20, 0, 20, 40, 60, 80, 100, 120, 140, 160, 180].map((dx) => `<path d="M ${60 + dx} 62 L ${110 + dx} 96" stroke="#14243e" stroke-width="3"/>`).join(''),
+    front: (b) => `
+      <path d="M 14 100 L 44 104" stroke="${OUT}" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M 18 101 l 2 4 l 2 -4 l 2 4 l 2 -4 l 2 4 l 2 -4 l 2 4 l 2 -4 l 2 4 l 2 -4" stroke="#fff" stroke-width="1.3" fill="none"/>
+      ${gill(64, 100, 32)}
+      ${leafFin(74, 104, 20, 6, 6, '#2f4a74')}
+      ${eye(42, 94, 7, '#c0c8d0')}`,
+  });
+
+  art.konoshiro = () => spindle({
+    label: 'コノシロ',
+    body: { nx: 22, mx: 118, px: 250, h: 42, hb: 40, ph: 6, k1: 0.12, k2: 0.78 },
+    grad: [[0, '#2c5a72'], [0.42, '#6e98ae'], [0.52, '#dfe8ee'], [1, '#f6f8fa']],
+    back: (b) => `
+      ${tail(b, 'fork', 46, 40, '#3e6a82')}
+      ${finUp(b, 116, 146, 18, '#3e6a82', 0.3, false)}
+      <path d="M 144 ${f(b.top(144) - 6)} Q 190 ${f(b.top(170) - 20)} 236 ${f(b.top(230) - 8)}" fill="none" stroke="${OUT}" stroke-width="1.8" stroke-linecap="round"/>
+      ${finDown(b, 180, 222, 9, '#c7d3df', 0.1, false)}`,
+    clip: () => [70, 78, 86].map((y) => `<path d="M 60 ${y} L 252 ${100 - (100 - y) * 0.4}" stroke="#2a4a5c" stroke-width="1.6" stroke-dasharray="2 4" opacity="0.8"/>`).join('')
+      + '<circle cx="74" cy="84" r="5.5" fill="#1a2a36"/>',
+    front: (b) => `
+      ${gill(62, 100, 38)}
+      ${leafFin(70, 112, 20, 5, 20, '#c7d3df')}
+      <path d="M 22 102 Q 26 106 32 104" fill="none" stroke="${OUT}" stroke-width="1.8" stroke-linecap="round"/>
+      ${eye(42, 95, 7.5, '#c9d0d6')}`,
+  });
+
+  const tallSilver = (o) => spindle({
+    label: o.label,
+    body: { nx: 30, mx: 130, px: 228, h: 62, hb: 58, ph: 9, k1: 0.06, k2: 0.95, k3: 0.9, ny: 4 },
+    grad: o.grad,
+    back: (b) => `
+      ${tail(b, 'round', 40, 34, o.finC)}
+      ${o.dorsal(b)}
+      ${finDown(b, 150, 214, 16, o.finC, 0.2)}`,
+    clip: o.clip,
+    front: (b) => `
+      ${gill(74, 102, 50)}
+      ${leafFin(84, 112, 24, 8, 20, o.finC)}
+      ${o.mouth}
+      ${eye(o.eyeX || 56, o.eyeY || 84, o.eyeR || 8, '#d8c070')}`,
+  });
+
+  art.matoudai = () => tallSilver({
+    label: 'マトウダイ',
+    grad: [[0, '#8a8a7c'], [0.5, '#b8b7a6'], [1, '#e6e4d8']],
+    finC: '#8c8a76',
+    dorsal: (b) => `${Array.from({ length: 9 }, (_, i) => { const x = 96 + i * 6; return `<path d="M ${x} ${f(b.top(x) + 3)} Q ${x + 6} ${f(b.top(x) - 40 + i * 3)} ${x + 14} ${f(b.top(x) - 56 + i * 4)}" fill="none" stroke="#6a685a" stroke-width="2" stroke-linecap="round"/>`; }).join('')}${finUp(b, 96, 150, 18, '#8c8a76', 0.2, false)}${finUp(b, 156, 216, 18, '#8c8a76', 0.2)}`,
+    clip: () => '<circle cx="140" cy="100" r="15" fill="#1d1d1d" stroke="#f4f2e6" stroke-width="5"/>',
+    mouth: `<path d="M 28 104 Q 40 122 60 114" fill="#d8d2be" stroke="${OUT}" stroke-width="2"/>`,
+  });
+
+  art.kagamidai = () => tallSilver({
+    label: 'カガミダイ',
+    grad: [[0, '#9aa6b0'], [0.4, '#d6dde3'], [0.6, '#f4f7f9'], [1, '#dfe5ea']],
+    finC: '#a8b2ba',
+    dorsal: (b) => `${finUp(b, 96, 150, 28, '#a8b2ba', 0.2)}${finUp(b, 156, 216, 18, '#a8b2ba', 0.2)}`,
+    clip: () => '<ellipse cx="120" cy="80" rx="60" ry="20" fill="#fff" opacity="0.5" transform="rotate(-15 120 80)"/>',
+    mouth: `<path d="M 30 104 Q 40 116 56 112" fill="none" stroke="${OUT}" stroke-width="2"/>`,
+    eyeR: 11, eyeX: 58,
+  });
+
+  art.managatsuo = () => custom('マナガツオ', (id) => {
+    const d = 'M 30 104 Q 70 46 140 42 Q 200 52 250 96 L 250 104 Q 200 148 140 158 Q 70 156 30 104 Z';
+    return {
+      defs: gradient(`${id}g`, [[0, '#9aa6b2'], [0.45, '#d6dde4'], [1, '#f1f4f7']]),
+      inner: `
+        <path d="M 244 96 Q 270 70 300 46 Q 286 80 274 100 Q 286 120 300 154 Q 270 130 244 104 Z" fill="#a8b4c0" stroke="${OUT}" stroke-width="1.8"/>
+        <path d="M 140 46 Q 190 20 214 22 Q 210 50 232 80 Z" fill="#a8b4c0" stroke="${OUT}" stroke-width="1.6"/>
+        <path d="M 140 154 Q 190 180 214 178 Q 210 150 232 120 Z" fill="#a8b4c0" stroke="${OUT}" stroke-width="1.6"/>
+        <path d="${d}" fill="url(#${id}g)" stroke="${OUT}" stroke-width="2"/>
+        ${dots(301, 40, 60, 230, 60, 140, 0.8, 1.4, '#6a7682', 0.4)}
+        ${leafFin(80, 102, 40, 8, 12, '#b8c4ce')}
+        <path d="M 28 104 Q 32 108 36 106" fill="none" stroke="${OUT}" stroke-width="1.8" stroke-linecap="round"/>
+        ${eye(52, 92, 7, '#c9d0d6')}`,
+    };
+  });
+
+  art.ibodai = () => spindle({
+    label: 'イボダイ',
+    body: { nx: 30, mx: 125, px: 236, h: 50, hb: 48, ph: 8, k1: 0.05, k2: 0.95, k3: 0.9, ny: 2 },
+    grad: [[0, '#6f8798'], [0.45, '#b2c2cc'], [1, '#eef2f5']],
+    back: (b) => `
+      ${tail(b, 'fork', 46, 42, '#8fa2b0')}
+      ${finUp(b, 92, 210, 18, '#8fa2b0', 0.2)}
+      ${finDown(b, 136, 210, 16, '#b4c2cc', 0.2)}`,
+    clip: () => '<ellipse cx="82" cy="74" rx="6" ry="7" fill="#1d1d1d"/>',
+    front: (b) => `
+      ${gill(70, 100, 42)}
+      ${leafFin(80, 108, 30, 8, 14, '#b4c2cc')}
+      <path d="M 29 104 Q 33 108 38 106" fill="none" stroke="${OUT}" stroke-width="1.8" stroke-linecap="round"/>
+      ${eye(52, 92, 8, '#c9d0d6')}`,
+  });
+
+  art.amadai = () => spindle({
+    label: 'アマダイ',
+    body: { nx: 30, mx: 100, px: 248, h: 44, hb: 34, ph: 8, k1: 0.0, k2: 1.0, k3: 0.6, ny: 8 },
+    grad: [[0, '#e2697a'], [0.5, '#f2a0a0'], [1, '#fde4dc']],
+    back: (b) => `
+      ${tail(b, 'square', 44, 38, '#f0a0a0', [-24, -12, 0, 12, 24].map((y) => `<path d="M ${b.px + 6} ${b.cy + y * 0.4} L ${b.px + 42} ${b.cy + y}" stroke="#f2cc2e" stroke-width="3"/>`).join(''))}
+      ${finUp(b, 80, 228, 14, '#ef8a95', 0.1)}
+      ${finDown(b, 140, 228, 12, '#f5b0b6', 0.1)}`,
+    front: (b) => `
+      <path d="M 50 102 L 64 104 L 54 112 Z" fill="#fff" stroke="${OUT}" stroke-width="1.2"/>
+      ${gill(72, 102, 36)}
+      ${leafFin(80, 110, 30, 8, 14, '#f5b0b6')}
+      <path d="M 30 108 Q 36 114 46 112" fill="none" stroke="${OUT}" stroke-width="1.8" stroke-linecap="round"/>
+      ${eye(48, 84, 8, '#e6b84a')}`,
+  });
+
+  art.akamutsu = () => spindle({
+    label: 'アカムツ',
+    body: { nx: 22, mx: 112, px: 246, h: 42, hb: 40, ph: 8, k1: 0.12, k2: 0.78, ny: 2 },
+    grad: [[0, '#d8323e'], [0.5, '#ef6a62'], [1, '#fbd2c8']],
+    back: (b) => `
+      ${tail(b, 'fork', 50, 44, '#e2464a')}
+      ${finUp(b, 96, 140, 22, '#e2464a', 0.2)}
+      ${finUp(b, 146, 196, 18, '#e2464a', 0.2)}
+      ${finDown(b, 160, 200, 16, '#ee7a70', 0.2)}`,
+    front: (b) => `
+      ${gill(74, 100, 40)}
+      ${leafFin(82, 108, 32, 8, 12, '#ee7a70')}
+      <path d="M 16 96 L 52 104 L 22 122 Q 14 110 16 96 Z" fill="#111" stroke="${OUT}" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M 16 96 L 52 104" stroke="#e2464a" stroke-width="3"/>
+      ${eye(50, 86, 13, '#f2c230')}`,
+  });
+
+  art.kidai = () => spindle({
+    label: 'キダイ',
+    body: { nx: 28, mx: 118, px: 240, h: 60, hb: 48, ph: 10, k1: 0.06, k2: 0.95, k3: 0.7, ny: 6 },
+    grad: [[0, '#e05a5e'], [0.45, '#f29a90'], [1, '#fde6dc']],
+    back: (b) => `
+      ${tail(b, 'shallow', 56, 46, '#ef8a80')}
+      ${finUp(b, 84, 214, 22, '#f2c040', 0.25)}
+      ${finDown(b, 172, 216, 18, '#f5b0a6', 0.2)}`,
+    clip: () => [[110, 52], [150, 58], [190, 70]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="14" ry="7" fill="#f6d040" opacity="0.9"/>`).join('')
+      + '<path d="M 28 96 Q 50 60 80 50" fill="none" stroke="#f6d040" stroke-width="8" opacity="0.8"/>',
+    front: (b) => `
+      ${gill(70, 100, 52)}
+      ${leafFin(84, 116, 44, 9, 18, '#f39a90')}
+      <path d="M 28 106 Q 34 112 42 110" fill="none" stroke="${OUT}" stroke-width="1.8" stroke-linecap="round"/>
+      ${eye(52, 86, 9, '#e6b84a')}`,
+  });
+
+  const salmonFront = (b, finC) => `
+      ${gill(62, 102, 38)}
+      ${leafFin(72, 112, 24, 7, 22, finC)}
+      ${leafFin(140, 134, 18, 6, 30, finC)}
+      ${mouthLine(20, 102, 42, 106)}
+      ${eye(42, 94, 6.5, '#c9d0d6')}`;
+  const salmonBack = (b, finC, tailExtra = '') => `
+      ${tail(b, 'shallow', 46, 40, finC, tailExtra)}
+      ${finUp(b, 122, 158, 24, finC, 0.25)}
+      ${adiposeFin(b, 212, finC)}
+      ${finDown(b, 184, 210, 16, finC, 0.2, false)}`;
+
+  art.karafuto = () => spindle({
+    label: 'カラフトマス',
+    body: { nx: 20, mx: 115, px: 250, h: 48, hb: 38, ph: 10, k1: 0.15, k2: 0.75, ny: 2 },
+    grad: [[0, '#3a4e5e'], [0.45, '#7e92a2'], [0.6, '#e4e8ec'], [1, '#f6f7f8']],
+    back: (b) => salmonBack(b, '#5a6e7e', dots(311, 14, b.px + 4, b.px + 40, b.cy - 34, b.cy + 34, 2.4, 4, '#111')),
+    clip: () => dots(312, 26, 60, 240, 54, 88, 2.2, 3.6, '#111'),
+    front: (b) => salmonFront(b, '#8a9caa'),
+  });
+
+  art.ginzake = () => spindle({
+    label: 'ギンザケ',
+    body: { nx: 20, mx: 125, px: 250, h: 40, hb: 38, ph: 10, k1: 0.2, k2: 0.65, ny: 2 },
+    grad: [[0, '#2a4e7a'], [0.4, '#7a98ba'], [0.55, '#e6ecf2'], [1, '#f7f8fa']],
+    back: (b) => salmonBack(b, '#4a6a90', dots(321, 10, b.px + 6, b.px + 40, b.cy - 36, b.cy - 6, 1.4, 2.2, '#111')),
+    clip: () => dots(322, 34, 50, 240, 62, 82, 1.2, 2, '#111'),
+    front: (b) => salmonFront(b, '#a8b8c8'),
+  });
+
+  art.benizake = () => spindle({
+    label: 'ベニザケ',
+    body: { nx: 14, mx: 125, px: 250, h: 42, hb: 38, ph: 10, k1: 0.2, k2: 0.65, ny: 4 },
+    grad: [[0, '#c82a2a'], [0.6, '#e04a3a'], [1, '#f08070']],
+    back: (b) => salmonBack(b, '#3d6a3a'),
+    clip: () => '<path d="M 0 0 L 74 0 Q 64 100 74 200 L 0 200 Z" fill="#3d7a42"/>',
+    front: (b) => `
+      ${gill(70, 102, 38)}
+      ${leafFin(78, 112, 24, 7, 22, '#c84a3a')}
+      <path d="M 12 100 Q 18 92 30 94 M 14 108 Q 22 116 40 110" fill="none" stroke="${OUT}" stroke-width="2.4" stroke-linecap="round"/>
+      ${eye(46, 92, 6.5, '#e0c050')}`,
+  });
+
+  // アイナメ・クジメ
+  const greenling = (label, grad, tailType, lines) => spindle({
+    label,
+    body: { nx: 20, mx: 115, px: 248, h: 36, hb: 32, ph: 9, k1: 0.15, k2: 0.75, ny: 2 },
+    grad,
+    back: (b) => `
+      ${tail(b, tailType, 42, 34, '#8a6a3a')}
+      ${finUp(b, 74, 146, 18, '#8a6a3a', 0.2)}
+      ${finUp(b, 150, 230, 18, '#8a6a3a', 0.3)}
+      ${finDown(b, 140, 228, 14, '#a8885a', 0.2)}`,
+    clip: () => dots(331 + lines, 30, 40, 248, 66, 120, 4, 9, '#5a3e1c', 0.45) + (lines > 1
+      ? [76, 88, 100, 112, 122].map((y) => `<path d="M 60 ${y} Q 150 ${y - 2} 248 ${100 + (y - 100) * 0.3}" fill="none" stroke="#f2e6c8" stroke-width="1.4"/>`).join('')
+      : '<path d="M 60 82 Q 150 80 248 98" fill="none" stroke="#f2e6c8" stroke-width="1.4"/>'),
+    front: (b) => `
+      ${gill(62, 100, 34)}
+      ${leafFin(72, 110, 30, 9, 12, '#a8885a')}
+      ${mouthLine(20, 102, 34, 105)}
+      ${eye(42, 92, 7, '#d8b040')}`,
+  });
+  art.ainame = () => greenling('アイナメ', [[0, '#7a5a2e'], [0.5, '#a8844e'], [1, '#e6d4b0']], 'square', 5);
+  art.kujime = () => greenling('クジメ', [[0, '#6e4e2a'], [0.5, '#9a7646'], [1, '#e0cca8']], 'round', 1);
+
+  // ======================================================
+  //  磯・沿岸
+  // ======================================================
+  art.mejina = () => spindle({
+    label: 'メジナ',
+    body: { nx: 30, mx: 120, px: 236, h: 54, hb: 48, ph: 10, k1: 0.05, k2: 0.95, k3: 0.8, ny: 4 },
+    grad: [[0, '#1f2a36'], [0.5, '#34465a'], [1, '#6c7c8c']],
+    back: (b) => `
+      ${tail(b, 'shallow', 46, 40, '#2a3644')}
+      ${finUp(b, 88, 210, 18, '#2a3644', 0.2)}
+      ${finDown(b, 160, 210, 18, '#2a3644', 0.2)}`,
+    clip: (b) => scales(b, 70, 236, 12, '#0e1620', 0.6),
+    front: (b) => `
+      ${gill(70, 100, 46, '#0e1620')}
+      ${leafFin(82, 110, 26, 8, 14, '#2a3644')}
+      <path d="M 29 104 Q 32 108 36 106" fill="none" stroke="#c8d0d8" stroke-width="1.8" stroke-linecap="round"/>
+      ${eye(50, 88, 8, '#5fb0e0')}`,
+  });
+
+  const grouper = (o) => spindle({
+    label: o.label,
+    body: { nx: 18, mx: 112, px: 240, h: 44, hb: 42, ph: 11, k1: 0.12, k2: 0.75, ny: 2 },
+    grad: o.grad,
+    back: (b) => `
+      ${tail(b, 'round', 44, 38, o.finC, o.tailExtra ? o.tailExtra(b) : '')}
+      ${finUp(b, 70, 210, 20, o.finC, 0.2)}
+      ${finDown(b, 160, 206, 18, o.finC, 0.3)}`,
+    clip: o.clip,
+    front: (b) => `
+      ${gill(68, 100, 40)}
+      ${leafFin(76, 110, 30, 11, 14, o.finC)}
+      <path d="M 14 100 Q 34 120 58 108 L 54 104 Z" fill="#e8dcc4" stroke="${OUT}" stroke-width="2"/>
+      ${eye(42, 88, 6.5, '#d8b040')}`,
+  });
+  art.kue = () => grouper({
+    label: 'クエ',
+    grad: [[0, '#5a4a3a'], [0.5, '#7e6a54'], [1, '#b8a68c']],
+    finC: '#6a5846',
+    clip: () => [40, 80, 120, 160, 200, 236].map((x) => `<path d="M ${x} 40 L ${x + 30} 160" stroke="#2e241a" stroke-width="12" opacity="0.4" stroke-linecap="round"/>`).join('') + dots(341, 30, 30, 240, 50, 150, 2, 4, '#2e241a', 0.3),
+  });
+  art.mahata = () => grouper({
+    label: 'マハタ',
+    grad: [[0, '#6a6e72'], [0.5, '#8e9296'], [1, '#c8cbce']],
+    finC: '#5e6266',
+    tailExtra: (b) => `<path d="M ${b.px + 44} ${b.cy - 30} Q ${b.px + 50} ${b.cy} ${b.px + 44} ${b.cy + 30}" stroke="#fff" stroke-width="3" fill="none"/>`,
+    clip: () => vbands([58, 86, 114, 142, 170, 198, 226], 12, '#2a2c30', 0.85, -2),
+  });
+  art.kijihata = () => grouper({
+    label: 'キジハタ',
+    grad: [[0, '#a8743a'], [0.5, '#c89458'], [1, '#ecd2a6']],
+    finC: '#c88a3a',
+    clip: () => dots(351, 80, 30, 240, 50, 150, 1.6, 2.8, '#f06a1a', 0.95) + '<ellipse cx="150" cy="62" rx="8" ry="6" fill="#2a1a0a"/>',
+  });
+
+  art.kurosoi = () => spindle({
+    label: 'クロソイ',
+    body: { nx: 22, mx: 110, px: 238, h: 46, hb: 40, ph: 9, k1: 0.12, k2: 0.8, ny: 2 },
+    grad: [[0, '#2e3236'], [0.5, '#4e5458'], [0.75, '#8a9094'], [1, '#c8ccce']],
+    back: (b) => `
+      ${tail(b, 'square', 42, 36, '#3a3e42')}
+      ${finUp(b, 70, 210, 24, '#3a3e42', 0.2)}
+      ${finDown(b, 160, 202, 18, '#4a4e52', 0.2)}`,
+    clip: () => '<path d="M 50 92 L 66 112 M 50 92 L 70 100 M 50 92 L 72 88" stroke="#121416" stroke-width="5" stroke-linecap="round"/>',
+    front: (b) => `
+      ${[34, 44, 54, 62].map((x) => `<path d="M ${x} ${f(b.top(x) + 2)} L ${x + 3} ${f(b.top(x) - 7)} L ${x + 7} ${f(b.top(x + 7) + 2)} Z" fill="#3a3e42" stroke="${OUT}" stroke-width="1.1"/>`).join('')}
+      ${gill(72, 100, 44, '#121416')}
+      ${leafFin(80, 110, 32, 10, 14, '#4a4e52')}
+      <path d="M 22 104 Q 34 116 48 108" fill="none" stroke="#c8ccce" stroke-width="2" stroke-linecap="round"/>
+      ${eye(50, 86, 9, '#c9b778')}`,
+  });
+
+  art.kusafugu = () => spindle({
+    label: 'クサフグ',
+    body: { nx: 38, mx: 128, px: 246, h: 56, hb: 56, ph: 11, k1: 0.0, k2: 1.0, ny: 6 },
+    grad: [[0, '#4a5a3a'], [0.5, '#6e7e56'], [0.58, '#f7f7f0'], [1, '#ffffff']],
+    back: (b) => `
+      ${tail(b, 'round', 36, 26, '#5a6a46')}
+      ${finUp(b, 200, 226, 20, '#5a6a46', 0.4, false)}
+      ${finDown(b, 200, 226, 20, '#f2f2e8', 0.4, false)}`,
+    clip: () => dots(361, 70, 50, 246, 44, 100, 1.4, 2.6, '#fbfbf0', 0.95),
+    front: (b) => `
+      ${leafFin(100, 104, 22, 10, -10, '#5a6a46')}
+      <path d="M 37 102 Q 44 98 46 106 Q 44 114 37 110 Z" fill="#f4f0e2" stroke="${OUT}" stroke-width="1.6"/>
+      <line x1="38" y1="106" x2="45" y2="106" stroke="${OUT}" stroke-width="1.2"/>
+      ${eye(74, 80, 8, '#4fc0a0')}`,
+  });
+
+  art.manbou = () => custom('マンボウ', (id) => ({
+    defs: gradient(`${id}g`, [[0, '#7a8a96'], [0.5, '#a8b4bc'], [1, '#dfe4e8']]),
+    inner: `
+      <path d="M 196 60 Q 210 10 236 4 Q 230 40 226 70 Z" fill="#7a8a96" stroke="${OUT}" stroke-width="1.8"/>
+      <path d="M 196 140 Q 210 190 236 196 Q 230 160 226 130 Z" fill="#a8b4bc" stroke="${OUT}" stroke-width="1.8"/>
+      <path d="M 40 100 Q 40 40 120 34 Q 200 34 236 70 Q 252 100 236 130 Q 200 166 120 166 Q 40 160 40 100 Z" fill="url(#${id}g)" stroke="${OUT}" stroke-width="2.2"/>
+      <path d="M 236 70 Q 262 76 268 90 Q 258 100 268 110 Q 262 124 236 130" fill="#94a2ac" stroke="${OUT}" stroke-width="1.8"/>
+      ${dots(371, 20, 80, 220, 50, 150, 2, 4, '#eef2f4', 0.6)}
+      ${leafFin(96, 104, 22, 9, -20, '#94a2ac')}
+      ${gill(90, 104, 14)}
+      <circle cx="44" cy="104" r="4" fill="#f4f2ea" stroke="${OUT}" stroke-width="1.5"/>
+      ${eye(70, 90, 7, '#c9d0d6')}`,
+  }));
+
+  art.akamanbou = () => spindle({
+    label: 'アカマンボウ',
+    body: { nx: 30, mx: 130, px: 236, h: 64, hb: 60, ph: 10, k1: 0.02, k2: 0.95, k3: 0.9, ny: 2 },
+    grad: [[0, '#5a6a86'], [0.45, '#a8b4c8'], [1, '#e6d8e0']],
+    back: (b) => `
+      ${tail(b, 'fork', 56, 50, '#e23a3a')}
+      <path d="M 90 ${f(b.top(90) + 4)} Q 100 ${f(b.top(96) - 50)} 116 ${f(b.top(110) - 40)} Q 180 ${f(b.top(170) - 10)} 228 ${f(b.top(226) + 3)} Z" fill="#e23a3a" stroke="${OUT}" stroke-width="1.8"/>
+      ${finDown(b, 150, 224, 14, '#e23a3a', 0.1)}`,
+    clip: () => dots(381, 60, 50, 236, 40, 160, 2, 4, '#ffffff', 0.85),
+    front: (b) => `
+      ${leafFin(90, 110, 36, 10, 6, '#e23a3a')}
+      ${leafFin(116, 154, 30, 8, 60, '#e23a3a')}
+      <path d="M 29 104 Q 34 110 40 106" fill="none" stroke="#e23a3a" stroke-width="3" stroke-linecap="round"/>
+      ${eye(56, 92, 10, '#f2c230')}`,
+  });
+
+  art.tatsu = () => custom('タツノオトシゴ', (id) => ({
+    defs: gradient(`${id}g`, [[0, '#e8b03a'], [1, '#c8781e']]),
+    inner: `<g transform="translate(-70 6)">
+      <path d="M 196 38 Q 214 30 236 40 L 268 38 L 270 50 L 236 54 Q 228 66 214 70 Q 220 100 206 130 Q 196 150 188 160 Q 176 176 186 184 Q 200 190 202 176 Q 202 168 194 170" fill="none" stroke="${OUT}" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M 196 38 Q 214 30 236 40 L 268 38 L 270 50 L 236 54 Q 228 66 214 70 Q 220 100 206 130 Q 196 150 188 160 Q 176 176 186 184 Q 200 190 202 176 Q 202 168 194 170" fill="none" stroke="url(#${id}g)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M 186 64 Q 150 90 190 140 Q 210 110 212 72 Z" fill="url(#${id}g)" stroke="${OUT}" stroke-width="2"/>
+      ${[80, 96, 112, 128].map((y) => `<path d="M ${170 + (y - 80) * 0.2} ${y} Q 190 ${y + 4} ${210 - (y - 80) * 0.12} ${y}" fill="none" stroke="#8a4a10" stroke-width="1.5"/>`).join('')}
+      <path d="M 220 86 Q 240 80 246 96 Q 236 104 220 100 Z" fill="#f6d27a" stroke="${OUT}" stroke-width="1.4"/>
+      <path d="M 200 30 L 206 18 L 212 30" fill="#e8b03a" stroke="${OUT}" stroke-width="1.4"/>
+      ${eye(222, 44, 5, '#3a2a10')}</g>`,
+  }));
+
+  art.youji = () => custom('ヨウジウオ', (id) => ({
+    defs: gradient(`${id}g`, [[0, '#7a6a3a'], [1, '#c8b47a']]),
+    inner: `
+      <path d="M 280 96 Q 304 84 310 100 Q 304 116 280 104 Z" fill="#a8925a" stroke="${OUT}" stroke-width="1.6"/>
+      <path d="M 10 99 L 44 97 Q 60 92 80 94 L 282 98 L 282 102 L 80 106 Q 60 108 44 103 L 10 101 Z" fill="url(#${id}g)" stroke="${OUT}" stroke-width="1.8" stroke-linejoin="round"/>
+      ${Array.from({ length: 30 }, (_, i) => `<line x1="${90 + i * 6.3}" y1="94.5" x2="${90 + i * 6.3}" y2="105.5" stroke="#5a4a20" stroke-width="1"/>`).join('')}
+      <path d="M 150 94 Q 160 84 176 94 Z" fill="#c8b47a" stroke="${OUT}" stroke-width="1.2"/>
+      ${eye(56, 98, 4, '#d8c070')}`,
+  }));
+
+  const clownBody = { nx: 30, mx: 118, px: 232, h: 40, hb: 38, ph: 11, k1: 0.06, k2: 0.9, ny: 2 };
+  art.kakure = () => spindle({
+    label: 'カクレクマノミ',
+    body: clownBody,
+    grad: [[0, '#ff7a1a'], [1, '#ffa040']],
+    back: (b) => `
+      ${tail(b, 'round', 40, 32, '#ff7a1a', `<path d="M ${b.px + 36} ${b.cy - 26} Q ${b.px + 44} ${b.cy} ${b.px + 36} ${b.cy + 26}" stroke="#111" stroke-width="5" fill="none"/>`)}
+      ${finUp(b, 80, 210, 22, '#ff7a1a', 0.2)}
+      <path d="M 82 ${f(b.top(82) - 6)} Q 120 ${f(b.top(110) - 26)} 208 ${f(b.top(208) - 8)}" fill="none" stroke="#111" stroke-width="4"/>
+      ${finDown(b, 160, 206, 18, '#ff7a1a', 0.3)}`,
+    clip: () => [[64, 14, -6], [128, 18, -2], [204, 12, 0]].map(([x, w, sk]) => `<path d="M ${x} 20 L ${x + w} 20 L ${x + w + sk} 180 L ${x + sk} 180 Z" fill="#fff" stroke="#111" stroke-width="3"/>`).join(''),
+    front: (b) => `
+      ${leafFin(80, 112, 24, 10, 20, '#ff8a2a')}
+      <path d="M 29 104 Q 33 108 38 106" fill="none" stroke="${OUT}" stroke-width="1.8" stroke-linecap="round"/>
+      ${eye(48, 92, 7, '#ff9a2a')}`,
+  });
+  art.kumanomi = () => spindle({
+    label: 'クマノミ',
+    body: clownBody,
+    grad: [[0, '#2a1a12'], [0.6, '#4a2a18'], [1, '#e08a2a']],
+    back: (b) => `
+      ${tail(b, 'shallow', 40, 32, '#fff3c0')}
+      ${finUp(b, 80, 210, 22, '#2a1a12', 0.2)}
+      ${finDown(b, 160, 206, 18, '#f2b020', 0.3)}`,
+    clip: () => [[64, 12, -6], [128, 14, -2], [204, 10, 0]].map(([x, w, sk]) => `<path d="M ${x} 20 L ${x + w} 20 L ${x + w + sk} 180 L ${x + sk} 180 Z" fill="#fbfbf4"/>`).join('')
+      + '<path d="M 20 90 Q 40 140 70 150 L 20 150 Z" fill="#f2a020"/>',
+    front: (b) => `
+      ${leafFin(80, 112, 24, 10, 20, '#f2b020')}
+      ${leafFin(100, 136, 18, 7, 50, '#f2b020')}
+      <path d="M 29 104 Q 33 108 38 106" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+      ${eye(48, 92, 7, '#f2a020')}`,
+  });
+
+  const discBody = { nx: 22, mx: 130, px: 226, h: 66, hb: 62, ph: 10, k1: 0.15, k2: 0.75, k3: 0.85, ny: 2 };
+  art.chouchou = () => spindle({
+    label: 'チョウチョウウオ',
+    body: discBody,
+    grad: [[0, '#f8e05a'], [0.5, '#fff6c0'], [1, '#f6e8a0']],
+    back: (b) => `
+      ${tail(b, 'square', 34, 30, '#f6d840')}
+      ${finUp(b, 90, 220, 16, '#f2cc2e', 0.5)}
+      ${finDown(b, 150, 220, 16, '#f2cc2e', 0.5)}`,
+    clip: () => '<path d="M 56 30 L 76 30 L 70 170 L 50 170 Z" fill="#1d1d1d"/>'
+      + [90, 110, 130, 150, 170, 190].map((x) => `<path d="M ${x} 40 L ${x + 40} 160" stroke="#d8a020" stroke-width="2" opacity="0.6"/>`).join('')
+      + '<circle cx="200" cy="74" r="9" fill="#1d1d1d" stroke="#fff" stroke-width="2"/>',
+    front: (b) => `
+      ${leafFin(90, 110, 24, 8, 10, '#fff2a0')}
+      <path d="M 16 100 L 30 98 L 30 104 Z" fill="#f6d840" stroke="${OUT}" stroke-width="1.4"/>
+      ${eye(62, 92, 6, '#fff')}`,
+  });
+  art.tsunodashi = () => custom('ツノダシ', (id) => {
+    const d = 'M 30 112 Q 50 60 120 40 Q 200 46 226 96 L 226 110 Q 200 160 120 166 Q 60 160 30 112 Z';
+    return {
+      defs: `<clipPath id="${id}c"><path d="${d}"/></clipPath>`,
+      inner: `
+        <path d="M 220 96 L 262 82 Q 258 104 262 124 L 220 112 Z" fill="#1d1d1d" stroke="${OUT}" stroke-width="1.6"/>
+        <path d="M 118 44 Q 150 0 300 10 Q 180 12 140 48 Z" fill="#fbfbf4" stroke="${OUT}" stroke-width="1.6"/>
+        <path d="${d}" fill="#fbfbf4"/>
+        <g clip-path="url(#${id}c)">
+          <path d="M 70 0 L 110 0 L 130 200 L 90 200 Z" fill="#1d1d1d"/>
+          <path d="M 110 0 L 130 0 L 150 200 L 130 200 Z" fill="#fbfbf4"/>
+          <path d="M 150 0 L 230 0 L 230 200 L 170 200 Z" fill="#f6d030"/>
+          <path d="M 176 0 L 206 0 L 226 200 L 196 200 Z" fill="#1d1d1d"/>
+        </g>
+        <path d="${d}" fill="none" stroke="${OUT}" stroke-width="2"/>
+        <path d="M 14 108 L 32 104 L 34 114 Z" fill="#f08a2a" stroke="${OUT}" stroke-width="1.4"/>
+        ${eye(80, 94, 6, '#f6d030')}`,
+    };
+  });
+
+  art.mutsugoro = () => spindle({
+    label: 'ムツゴロウ',
+    body: { nx: 22, mx: 76, px: 238, h: 30, hb: 30, ph: 10, k1: 0.05, k2: 0.95, ny: 8 },
+    grad: [[0, '#3e4a3a'], [0.5, '#5e6a54'], [1, '#a8ae96']],
+    back: (b) => `
+      ${tail(b, 'round', 44, 30, '#4e5a46')}
+      ${finUp(b, 86, 120, 34, '#4e5a46', 0.5)}
+      ${finUp(b, 130, 214, 22, '#4e5a46', 0.2)}
+      ${finDown(b, 136, 212, 14, '#6e7a64', 0.2)}`,
+    clip: () => dots(391, 60, 30, 238, 64, 116, 1.4, 2.6, '#7fd0ff', 0.95),
+    front: (b) => `
+      ${leafFin(70, 110, 24, 10, 30, '#5e6a54')}
+      <path d="M 20 108 Q 30 116 48 112" fill="none" stroke="${OUT}" stroke-width="2"/>
+      <path d="M 44 74 L 46 62 M 58 74 L 60 62" stroke="${OUT}" stroke-width="5" stroke-linecap="round"/>
+      ${eye(44, 58, 7, '#d8c070')}${eye(60, 58, 7, '#d8c070')}`,
+  });
+
+  art.shumoku = () => custom('シュモクザメ', (id) => ({
+    defs: gradient(`${id}g`, [[0, '#6f7f8c'], [1, '#8f9eaa']]),
+    inner: `
+      <path d="M 250 100 L 310 76 Q 296 100 310 124 Z" fill="#6c7b87" stroke="${OUT}" stroke-width="1.8"/>
+      <path d="M 110 98 L 70 36 Q 96 40 140 92 Z" fill="#6c7b87" stroke="${OUT}" stroke-width="1.8"/>
+      <path d="M 110 102 L 70 164 Q 96 160 140 108 Z" fill="#6c7b87" stroke="${OUT}" stroke-width="1.8"/>
+      <path d="M 60 92 Q 140 84 250 96 L 250 104 Q 140 116 60 108 Z" fill="url(#${id}g)" stroke="${OUT}" stroke-width="2"/>
+      <path d="M 26 48 Q 40 42 48 48 Q 54 80 62 92 L 62 108 Q 54 120 48 152 Q 40 158 26 152 Q 34 100 26 48 Z" fill="url(#${id}g)" stroke="${OUT}" stroke-width="2"/>
+      <path d="M 140 96 Q 150 80 160 98" fill="#5a6874" stroke="${OUT}" stroke-width="1.4"/>
+      <circle cx="32" cy="52" r="4" fill="#111"/><circle cx="32" cy="148" r="4" fill="#111"/>`,
+  }));
+
+  art.manta = () => custom('マンタ', (id) => ({
+    defs: `<radialGradient id="${id}g" cx="0.4" cy="0.5" r="0.6"><stop offset="0" stop-color="#3a4a5a"/><stop offset="1" stop-color="#1a2430"/></radialGradient>`,
+    inner: `
+      <path d="M 196 100 Q 230 100 262 98" fill="none" stroke="#1a2430" stroke-width="4" stroke-linecap="round"/>
+      <path d="M 50 90 Q 60 10 140 6 Q 170 40 200 100 Q 170 160 140 194 Q 60 190 50 110 Z" fill="url(#${id}g)" stroke="${OUT}" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M 52 84 Q 24 80 20 70 Q 34 70 56 78 Z" fill="#2a3644" stroke="${OUT}" stroke-width="1.6"/>
+      <path d="M 52 116 Q 24 120 20 130 Q 34 130 56 122 Z" fill="#2a3644" stroke="${OUT}" stroke-width="1.6"/>
+      <path d="M 86 60 Q 110 50 120 70 Q 100 74 86 60 Z M 86 140 Q 110 150 120 130 Q 100 126 86 140 Z" fill="#e8eef2" opacity="0.85"/>
+      <circle cx="58" cy="84" r="3" fill="#fff"/><circle cx="58" cy="116" r="3" fill="#fff"/>`,
+  }));
+
+  art.shachi = () => custom('シャチ', (id) => {
+    const d = 'M 14 104 C 18 80 60 64 110 64 C 170 64 222 86 262 97 L 262 104 C 222 118 160 138 100 138 C 50 138 16 124 14 104 Z';
+    return {
+      defs: `<clipPath id="${id}c"><path d="${d}"/></clipPath>`,
+      inner: `
+        <path d="M 256 96 Q 284 86 314 90 Q 300 100 314 110 Q 284 114 256 105 Z" fill="#1d1d1d" stroke="${OUT}" stroke-width="1.8"/>
+        <path d="M 140 68 L 160 4 Q 168 40 184 72 Z" fill="#1d1d1d" stroke="${OUT}" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="${d}" fill="#1d1d1d"/>
+        <g clip-path="url(#${id}c)">
+          <path d="M 10 112 Q 60 128 120 126 Q 170 120 200 128 Q 160 150 100 150 Q 30 150 10 112 Z" fill="#fbfbf8"/>
+          <path d="M 160 112 Q 190 104 214 116 Q 190 124 160 112 Z" fill="#fbfbf8"/>
+          <path d="M 180 70 Q 200 74 210 86 Q 190 86 176 80 Z" fill="#9aa0a6" opacity="0.8"/>
+        </g>
+        <path d="${d}" fill="none" stroke="${OUT}" stroke-width="2"/>
+        <ellipse cx="62" cy="88" rx="14" ry="6" fill="#fbfbf8" transform="rotate(-8 62 88)"/>
+        <path d="M 80 122 Q 92 156 116 160 Q 108 138 104 122 Z" fill="#1d1d1d" stroke="${OUT}" stroke-width="1.8"/>
+        <path d="M 16 108 Q 34 110 48 104" fill="none" stroke="#fbfbf8" stroke-width="1.6"/>
+        <circle cx="46" cy="96" r="3" fill="#fff"/>`,
+    };
+  });
+
+  art.datsu = () => spindle({
+    label: 'ダツ',
+    body: { nx: 70, mx: 160, px: 272, h: 16, hb: 16, ph: 5, k1: 0.25, k2: 0.6 },
+    grad: [[0, '#2f6a6a'], [0.45, '#6aa8a0'], [0.55, '#dbe9e6'], [1, '#f6fbfa']],
+    back: (b) => `
+      ${tail(b, 'fork', 28, 20, '#3f7a76')}
+      ${finUp(b, 228, 252, 12, '#3f7a76', 0.2, false)}
+      ${finDown(b, 222, 250, 12, '#c9dcd6', 0.2, false)}`,
+    front: (b) => `
+      <path d="M 72 98 L 4 99 L 72 101 Z" fill="#4a8a84" stroke="${OUT}" stroke-width="1.2" stroke-linejoin="round"/>
+      <path d="M 72 101 L 6 102 L 72 104 Z" fill="#cfe0dc" stroke="${OUT}" stroke-width="1.2" stroke-linejoin="round"/>
+      ${gill(104, 100, 14)}
+      ${leafFin(110, 103, 14, 5, 5, '#5a9a90')}
+      ${eye(86, 97, 5.5, '#c0c8d0')}`,
+  });
+
+  // ======================================================
+  //  川・池
+  // ======================================================
+  const minnow = (o) => spindle({
+    label: o.label,
+    body: { nx: 22, mx: 118, px: 248, h: o.h || 32, hb: o.hb || 30, ph: 8, k1: 0.15, k2: 0.72, ny: 2 },
+    grad: o.grad,
+    back: (b) => `
+      ${tail(b, 'fork', 44, 34, o.finC)}
+      ${finUp(b, 116, 146, 24, o.finC, 0.25)}
+      ${o.anal ? o.anal(b) : finDown(b, 176, 206, 14, o.finC2 || o.finC, 0.2, false)}`,
+    clip: o.clip,
+    front: (b) => `
+      ${gill(62, 100, (o.h || 32) * 0.9)}
+      ${leafFin(70, 108, 22, 6, 18, o.finC2 || o.finC)}
+      ${leafFin(124, 126, 16, 5, 30, o.finC2 || o.finC)}
+      ${o.mouth || mouthLine(22, 101, 34, 104)}
+      ${eye(42, 95, 6.5, o.iris || '#d8c070')}`,
+  });
+
+  art.ugui = () => minnow({
+    label: 'ウグイ',
+    grad: [[0, '#3e4a3c'], [0.45, '#7a8a76'], [0.6, '#dcdcd0'], [1, '#f2f0e8']],
+    finC: '#e0503a', finC2: '#e8604a',
+    clip: () => '<path d="M 40 106 Q 150 104 250 104" stroke="#e8503a" stroke-width="7"/><path d="M 40 94 Q 150 92 250 98" stroke="#1d1d1d" stroke-width="5"/><path d="M 40 116 Q 150 114 250 108" stroke="#1d1d1d" stroke-width="4"/>',
+  });
+
+  art.oikawa = () => minnow({
+    label: 'オイカワ',
+    grad: [[0, '#3a6a6a'], [0.5, '#7aaab0'], [1, '#e8eef0']],
+    finC: '#7aa8a8', finC2: '#f08aa0',
+    clip: () => vbands([70, 96, 122, 148, 174, 200, 226], 11, '#4fb0d8', 0.75, -6) + vbands([83, 109, 135, 161, 187, 213], 8, '#f08aa0', 0.7, -6),
+    anal: (b) => `<path d="M 150 ${f(b.bot(150) - 4)} Q 170 ${f(b.bot(160) + 40)} 220 ${f(b.bot(210) + 30)} Q 214 ${f(b.bot(214) + 6)} 222 ${f(b.bot(222) - 3)} Z" fill="#f08aa0" stroke="${OUT}" stroke-width="1.6"/>`,
+  });
+
+  art.tanago = () => minnow({
+    label: 'タナゴ',
+    h: 42, hb: 38,
+    grad: [[0, '#6a7a7a'], [0.5, '#aebcbc'], [1, '#eef2f0']],
+    finC: '#9aa8a6', finC2: '#f0a0b0',
+    clip: () => '<path d="M 130 100 L 252 100" stroke="#4a7ad8" stroke-width="7" stroke-linecap="round" opacity="0.9"/><ellipse cx="74" cy="82" rx="5" ry="6" fill="#2a3a4a" opacity="0.6"/>',
+    anal: (b) => finDown(b, 150, 210, 18, '#f0a0b0', 0.2),
+    mouth: `${mouthLine(22, 101, 32, 104)}<path d="M 26 104 q 2 4 -1 7" stroke="${OUT}" stroke-width="1.4" fill="none" stroke-linecap="round"/>`,
+  });
+
+  art.shimadojou = () => eel({
+    label: 'シマドジョウ', T: 12, dorsal: 170, anal: 190, finW: 4,
+    grad: [[0, '#b8a678'], [0.5, '#e0d4ae'], [1, '#f4eedc']],
+    finColor: '#cbbc8e', eyeR: 3.2, iris: '#c8b878',
+    clip: (yc, th) => {
+      let s = '';
+      for (let x = 30; x < 296; x += 9) s += `<ellipse cx="${x}" cy="${f(yc(x))}" rx="3.6" ry="2.6" fill="#3d321c"/>`;
+      for (let x = 36; x < 290; x += 6) s += `<circle cx="${x}" cy="${f(yc(x) - th(x) * 0.6)}" r="1.2" fill="#3d321c" opacity="0.8"/>`;
+      return s;
+    },
+    mouth: (x0, yc) => [[2, 5, 8], [4, 9, 10], [6, 12, 8]]
+      .map(([dx, ex, ey]) => `<path d="M ${x0 + dx} ${f(yc(x0) + 3)} q ${f(ex * 0.3)} ${f(ey * 0.6)} ${ex} ${ey}" fill="none" stroke="${OUT}" stroke-width="1.4" stroke-linecap="round"/>`).join(''),
+  });
+
+  art.amenamazu = () => spindle({
+    label: 'アメリカナマズ',
+    body: { nx: 18, mx: 100, px: 250, h: 36, hb: 32, ph: 9, k1: 0.05, k2: 0.75, ny: 4 },
+    grad: [[0, '#4a5a6e'], [0.5, '#7a8a9a'], [1, '#e2e6ea']],
+    back: (b) => `
+      ${tail(b, 'fork', 46, 40, '#5a6a7a')}
+      ${finUp(b, 96, 116, 26, '#5a6a7a', 0.3)}
+      ${adiposeFin(b, 210, '#5a6a7a')}
+      ${finDown(b, 170, 230, 16, '#8a98a6', 0.2)}`,
+    clip: () => dots(401, 26, 60, 246, 70, 110, 1.6, 3, '#111', 0.9),
+    front: (b) => `
+      ${leafFin(70, 112, 24, 8, 20, '#5a6a7a')}
+      <path d="M 16 106 Q 34 112 50 108" fill="#cfd4d8" stroke="${OUT}" stroke-width="2"/>
+      ${['M 20 100 Q 30 76 60 66', 'M 24 104 Q 28 128 46 140', 'M 30 110 Q 34 130 54 136', 'M 36 110 Q 44 126 62 128'].map((d) => `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="2" stroke-linecap="round"/>`).join('')}
+      ${eye(42, 92, 4.5, '#c8c08a')}`,
+  });
+
+  art.raigyo = () => spindle({
+    label: 'ライギョ',
+    body: { nx: 16, mx: 110, px: 256, h: 30, hb: 30, ph: 10, k1: 0.12, k2: 0.6, ny: 2 },
+    grad: [[0, '#4a4e36'], [0.5, '#7a7e5a'], [1, '#d8d6c0']],
+    back: (b) => `
+      ${tail(b, 'round', 40, 30, '#5a5e42')}
+      ${finUp(b, 64, 248, 16, '#5a5e42', 0.1)}
+      ${finDown(b, 120, 248, 14, '#6a6e50', 0.1)}`,
+    clip: () => {
+      let s = '';
+      for (let x = 50; x < 250; x += 26) s += `<ellipse cx="${x}" cy="86" rx="11" ry="8" fill="#1d1e14" opacity="0.85"/><ellipse cx="${x + 13}" cy="110" rx="10" ry="7" fill="#1d1e14" opacity="0.75"/>`;
+      return s;
+    },
+    front: (b) => `
+      ${leafFin(64, 108, 22, 8, 20, '#6a6e50')}
+      <path d="M 14 102 Q 30 112 52 106" fill="#e0dcc4" stroke="${OUT}" stroke-width="2"/>
+      ${eye(34, 94, 5, '#d8c070')}`,
+  });
+
+  art.smallmouth = () => spindle({
+    label: 'スモールマウスバス',
+    body: { nx: 18, mx: 120, px: 248, h: 40, hb: 36, ph: 10, k1: 0.12, k2: 0.72, ny: 2 },
+    grad: [[0, '#5e4a26'], [0.45, '#9a7a44'], [0.7, '#d8c49a'], [1, '#f0e6cc']],
+    back: (b) => `
+      ${tail(b, 'shallow', 44, 38, '#7a6236')}
+      ${finUp(b, 90, 146, 24, '#7a6236', 0.3)}
+      ${finUp(b, 148, 206, 22, '#8a7040', 0.3)}
+      ${finDown(b, 172, 208, 16, '#b49a6a', 0.2, false)}`,
+    clip: () => vbands([66, 92, 118, 144, 170, 196, 222], 9, '#3a2a10', 0.5, -2),
+    front: (b) => `
+      ${gill(72, 100, 38)}
+      ${leafFin(80, 110, 24, 7, 15, '#b49a6a')}
+      <path d="M 16 100 Q 28 110 42 104" fill="#efe2c4" stroke="${OUT}" stroke-width="2"/>
+      ${eye(44, 90, 7.5, '#d8302a')}`,
+  });
+
+  art.yatsume = () => eel({
+    label: 'ヤツメウナギ', T: 14, dorsal: 170, anal: 250, finW: 6, pectoral: false,
+    grad: [[0, '#6a6450'], [0.5, '#958e74'], [1, '#ddd6c0']],
+    finColor: '#857e66', eyeR: 4.5, iris: '#d8c070',
+    front: (yc) => Array.from({ length: 7 }, (_, i) => { const x = 44 + i * 7; return `<circle cx="${x}" cy="${f(yc(x) + 1)}" r="2.6" fill="#1d1d1d" stroke="#f0e8d0" stroke-width="1"/>`; }).join(''),
+    mouth: (x0, yc) => `<ellipse cx="${x0 + 1}" cy="${f(yc(x0) + 1)}" rx="4" ry="9" fill="#c87a6a" stroke="${OUT}" stroke-width="1.6"/>
+      <ellipse cx="${x0 + 1}" cy="${f(yc(x0) + 1)}" rx="1.8" ry="5" fill="#5a2a20"/>`,
+  });
+
+  art.brown = () => spindle({
+    label: 'ブラウントラウト',
+    body: { nx: 20, mx: 122, px: 250, h: 38, hb: 36, ph: 10, k1: 0.18, k2: 0.68, ny: 2 },
+    grad: [[0, '#5a4a26'], [0.4, '#9a8448'], [0.65, '#e4d4a4'], [1, '#f6eed6']],
+    back: (b) => `
+      ${tail(b, 'square', 44, 38, '#8a7440')}
+      ${finUp(b, 120, 156, 24, '#8a7440', 0.25)}
+      ${adiposeFin(b, 210, '#d8602a')}
+      ${finDown(b, 184, 210, 16, '#c8a868', 0.2, false)}`,
+    clip: () => dots(411, 40, 40, 240, 62, 100, 2, 3.2, '#1d1d1d', 0.9)
+      + Array.from({ length: 12 }, (_, i) => `<circle cx="${60 + i * 16 + (i % 2) * 6}" cy="${100 + (i % 3) * 5}" r="3" fill="#e0402a" stroke="#f6f0e0" stroke-width="2"/>`).join(''),
+    front: (b) => salmonFront(b, '#c8a868'),
+  });
+
+  art.sakuramasu = () => spindle({
+    label: 'サクラマス',
+    body: { nx: 20, mx: 125, px: 250, h: 42, hb: 38, ph: 10, k1: 0.2, k2: 0.65, ny: 2 },
+    grad: [[0, '#3a5a6a'], [0.4, '#88a2b0'], [0.55, '#eef0f2'], [1, '#f9f6f6']],
+    back: (b) => salmonBack(b, '#6a8494'),
+    clip: () => dots(421, 22, 50, 220, 62, 80, 1, 1.8, '#1d1d1d', 0.8) + '<path d="M 50 100 Q 150 98 250 102" stroke="#f0b8c4" stroke-width="10" opacity="0.4"/>',
+    front: (b) => salmonFront(b, '#b4c4ce'),
+  });
+
+  art.guppy = () => spindle({
+    label: 'グッピー',
+    body: { nx: 30, mx: 100, px: 180, h: 26, hb: 26, ph: 8, k1: 0.15, k2: 0.7, ny: 2 },
+    grad: [[0, '#8a9a9a'], [0.5, '#c8d0d0'], [1, '#eef0f0']],
+    back: (b) => `
+      <path d="M 172 92 Q 250 20 310 50 Q 300 100 310 150 Q 250 180 172 108 Z" fill="#ff6a3a" stroke="${OUT}" stroke-width="1.8"/>
+      ${dots(431, 30, 200, 300, 60, 140, 2.5, 5, '#2a4ad8', 0.8)}
+      <path d="M 120 ${f(b.top(120) + 3)} Q 150 ${f(b.top(130) - 40)} 200 ${f(b.top(170) - 30)} Q 180 ${f(b.top(176) - 4)} 176 ${f(b.top(176) + 2)} Z" fill="#3ab0e0" stroke="${OUT}" stroke-width="1.6"/>
+      ${finDown(b, 120, 144, 10, '#c8d0d0', 0.3, false)}`,
+    clip: () => '<ellipse cx="120" cy="96" rx="14" ry="9" fill="#ff8a3a" opacity="0.9"/><ellipse cx="150" cy="104" rx="8" ry="6" fill="#1d1d1d" opacity="0.7"/><ellipse cx="96" cy="104" rx="7" ry="5" fill="#3ab0e0" opacity="0.8"/>',
+    front: (b) => `
+      <path d="M 29 98 Q 34 96 38 99" fill="none" stroke="${OUT}" stroke-width="1.8" stroke-linecap="round"/>
+      ${eye(48, 96, 7, '#e8e0b8')}`,
+  });
+
+  art.nishikigoi = () => spindle({
+    label: 'ニシキゴイ',
+    body: { nx: 22, mx: 125, px: 248, h: 42, hb: 38, ph: 12, k1: 0.12, k2: 0.75, ny: 4 },
+    grad: [[0, '#fbfaf4'], [1, '#f2efe4']],
+    back: (b) => `
+      ${tail(b, 'fork', 46, 40, '#f4f0e6')}
+      ${finUp(b, 108, 196, 22, '#f4f0e6', 0.1)}
+      ${finDown(b, 192, 214, 18, '#f4f0e6', 0.2, false)}`,
+    clip: (b) => '<path d="M 40 60 Q 80 40 110 70 Q 100 96 70 90 Q 40 92 40 60 Z" fill="#e8301e"/><path d="M 140 56 Q 190 50 210 80 Q 190 100 150 90 Q 130 74 140 56 Z" fill="#e8301e"/>' + scales(b, 66, 250, 13, '#b8b0a0', 0.45),
+    front: (b) => `
+      ${gill(64, 102, 40)}
+      ${leafFin(70, 120, 24, 8, 30, '#f4f0e6')}
+      ${leafFin(130, 136, 20, 7, 30, '#f4f0e6')}
+      <path d="M 22 104 Q 26 110 32 108" fill="none" stroke="${OUT}" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M 26 105 Q 24 114 30 120" fill="none" stroke="${OUT}" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M 32 108 Q 34 120 44 126" fill="none" stroke="${OUT}" stroke-width="2.6" stroke-linecap="round"/>
+      ${eye(42, 92, 6.5, '#d8b44a')}`,
+  });
+
+  // ======================================================
+  //  イカ・エビ・カニ・貝
+  // ======================================================
+  art.zarigani = () => custom('ザリガニ', () => {
+    let segs = '';
+    for (let i = 0; i < 6; i++) segs += `<rect x="${150 + i * 18}" y="${86 + i * 0.5}" width="20" height="${30 - i * 1.5}" rx="5" fill="#d8301e" stroke="${OUT}" stroke-width="1.8"/>`;
+    return {
+      inner: `
+        <path d="M 252 86 L 300 72 L 304 100 L 300 126 L 252 114 Z" fill="#c8281a" stroke="${OUT}" stroke-width="1.8"/>
+        ${[90, 110, 130].map((x) => `<path d="M ${x} 118 l -6 22 l -6 8" stroke="#a8201a" stroke-width="3" fill="none" stroke-linecap="round"/>`).join('')}
+        ${segs}
+        <path d="M 70 84 Q 110 72 154 84 L 154 118 Q 110 126 70 116 Z" fill="#e0402a" stroke="${OUT}" stroke-width="2"/>
+        ${dots(441, 16, 80, 150, 84, 114, 1, 2, '#8a1a10', 0.6)}
+        <path d="M 74 92 Q 50 70 40 60 M 74 94 Q 40 80 10 86" stroke="#a8201a" stroke-width="2" fill="none"/>
+        <path d="M 80 112 Q 60 140 40 140" stroke="#c8281a" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M 46 128 Q 6 120 4 140 Q 8 160 46 152 L 30 142 Z" fill="#e0402a" stroke="${OUT}" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M 46 128 L 20 136" stroke="${OUT}" stroke-width="1.5"/>
+        <circle cx="76" cy="86" r="4" fill="#111"/>`,
+    };
+  });
+
+  // カニ（上から見た姿）
+  function crab(label, o) {
+    return custom(label, (id) => {
+      let legs = '';
+      o.legs.forEach(([ang, len]) => {
+        for (const side of [-1, 1]) {
+          const a = (ang * Math.PI) / 180;
+          const x1 = 160 + side * 40, y1 = 100 + Math.sin(a) * 18;
+          const kx = 160 + side * (40 + Math.cos(a) * len * 0.55), ky = y1 - Math.sin(a + 0.4) * len * 0.35 - 10;
+          const x2 = 160 + side * (40 + Math.cos(a) * len), y2 = y1 + Math.sin(a) * len * 0.5 + 20;
+          legs += `<path d="M ${f(x1)} ${f(y1)} L ${f(kx)} ${f(ky)} L ${f(x2)} ${f(y2)}" fill="none" stroke="${OUT}" stroke-width="${o.legW + 3}" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M ${f(x1)} ${f(y1)} L ${f(kx)} ${f(ky)} L ${f(x2)} ${f(y2)}" fill="none" stroke="${o.legC}" stroke-width="${o.legW}" stroke-linecap="round" stroke-linejoin="round"/>`;
+          if (o.spiky) for (let t = 0.2; t < 1; t += 0.2) legs += `<circle cx="${f(x1 + (kx - x1) * t)}" cy="${f(y1 + (ky - y1) * t - o.legW / 2)}" r="1.8" fill="${OUT}"/>`;
+        }
+      });
+      const claws = [-1, 1].map((side) => `<path d="M ${160 + side * 30} 74 Q ${160 + side * 56} 40 ${160 + side * 50} 26" fill="none" stroke="${o.legC}" stroke-width="${o.legW + 2}" stroke-linecap="round"/>
+        <ellipse cx="${160 + side * 50}" cy="22" rx="10" ry="14" fill="${o.legC}" stroke="${OUT}" stroke-width="1.8" transform="rotate(${side * 20} ${160 + side * 50} 22)"/>`).join('');
+      return {
+        defs: `<radialGradient id="${id}g" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stop-color="${o.c1}"/><stop offset="1" stop-color="${o.c2}"/></radialGradient>`,
+        inner: `<g transform="translate(160 104) scale(0.8) translate(-160 -100)">${legs}${claws}
+          <path d="${o.shell}" fill="url(#${id}g)" stroke="${OUT}" stroke-width="2.2" stroke-linejoin="round"/>
+          ${o.extra || ''}
+          <circle cx="150" cy="64" r="3.5" fill="#111"/><circle cx="170" cy="64" r="3.5" fill="#111"/></g>`,
+      };
+    });
+  }
+  art.zuwai = () => crab('ズワイガニ', {
+    legs: [[-10, 120], [10, 130], [30, 124], [50, 108]], legW: 7, legC: '#e88a4a',
+    c1: '#f2a060', c2: '#d0642a',
+    shell: 'M 120 70 Q 160 54 200 70 Q 210 110 160 136 Q 110 110 120 70 Z',
+  });
+  art.taraba = () => crab('タラバガニ', {
+    legs: [[0, 110], [25, 112], [50, 100]], legW: 11, legC: '#c8402a', spiky: true,
+    c1: '#e0603a', c2: '#a82a1a',
+    shell: 'M 122 66 L 160 52 L 198 66 L 204 104 L 160 140 L 116 104 Z',
+    extra: dots(451, 26, 124, 196, 62, 128, 1.6, 2.8, '#5a1208', 0.9),
+  });
+
+  function bivalve(label, o) {
+    return custom(label, (id) => ({
+      defs: `<linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${o.c1}"/><stop offset="1" stop-color="${o.c2}"/></linearGradient><clipPath id="${id}c"><path d="${o.d}"/></clipPath>`,
+      inner: `<path d="${o.d}" fill="url(#${id}g)" stroke="${OUT}" stroke-width="2.4"/>
+        <g clip-path="url(#${id}c)">${o.inner}</g>
+        <path d="M ${o.hx - 10} ${o.hy + 2} Q ${o.hx} ${o.hy - 6} ${o.hx + 10} ${o.hy + 2}" fill="none" stroke="${OUT}" stroke-width="2"/>`,
+    }));
+  }
+  const radial = (cx, cy, n, len, a0, a1, color, w, op) => Array.from({ length: n }, (_, i) => {
+    const a = (Math.PI * (a0 + ((a1 - a0) * i) / (n - 1))) / 180;
+    return `<line x1="${cx}" y1="${cy}" x2="${f(cx + Math.cos(a) * len)}" y2="${f(cy + Math.sin(a) * len)}" stroke="${color}" stroke-width="${w}" opacity="${op}"/>`;
+  }).join('');
+  const rings = (cx, cy, rs, color, w, op, ry = 0.75) => rs.map((r) => `<ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${f(r * ry)}" fill="none" stroke="${color}" stroke-width="${w}" opacity="${op}"/>`).join('');
+
+  art.akagai = () => bivalve('アカガイ', {
+    d: 'M 150 30 Q 250 30 278 110 Q 270 168 160 172 Q 50 168 42 110 Q 60 36 150 30 Z',
+    c1: '#a87a52', c2: '#5a3a22', hx: 150, hy: 30,
+    inner: radial(150, 30, 34, 170, 15, 165, '#2e1c10', 3.4, 0.7) + rings(150, 30, [60, 100, 140], '#d8b88a', 1.4, 0.4),
+  });
+  art.torigai = () => bivalve('トリガイ', {
+    d: 'M 160 34 Q 250 40 270 112 Q 262 166 160 168 Q 58 166 50 112 Q 70 40 160 34 Z',
+    c1: '#f2e6c4', c2: '#c8b484', hx: 160, hy: 34,
+    inner: radial(160, 34, 46, 160, 15, 165, '#a8945a', 1, 0.5) + rings(160, 34, [50, 80, 110], '#8a7440', 1.4, 0.35),
+  });
+  art.shijimi = () => bivalve('シジミ', {
+    d: 'M 160 50 Q 220 54 242 112 Q 236 150 160 152 Q 84 150 78 112 Q 100 54 160 50 Z',
+    c1: '#4a4a30', c2: '#14140c', hx: 160, hy: 50,
+    inner: rings(160, 40, [30, 46, 62, 78, 94, 108], '#8a8a5a', 1.6, 0.6, 0.8) + '<ellipse cx="136" cy="86" rx="22" ry="8" fill="#fff" opacity="0.3" transform="rotate(-20 136 86)"/>',
+  });
+  art.muuru = () => bivalve('ムール貝', {
+    d: 'M 40 120 Q 30 96 60 84 Q 160 44 270 70 Q 290 96 260 130 Q 160 160 60 136 Q 44 132 40 120 Z',
+    c1: '#3a4a6a', c2: '#0e1220', hx: 44, hy: 114,
+    inner: rings(40, 116, [40, 80, 120, 160, 200, 240], '#6a7aa0', 1.4, 0.5, 0.35) + '<path d="M 80 96 Q 160 70 250 80" stroke="#fff" stroke-width="6" opacity="0.25" fill="none"/>',
+  });
+  art.tsubu = () => custom('ツブ貝', (id) => ({
+    defs: gradient(`${id}g`, [[0, '#d8c49a'], [1, '#8a6a42']]),
+    inner: `
+      <path d="M 160 12 Q 196 60 222 110 Q 236 160 190 176 Q 140 186 106 166 Q 84 130 130 70 Z" fill="url(#${id}g)" stroke="${OUT}" stroke-width="2.4" stroke-linejoin="round"/>
+      ${[[150, 40, 170, 50], [136, 70, 196, 82], [118, 106, 220, 120]].map(([x1, y1, x2, y2]) => `<path d="M ${x1} ${y1} Q ${(x1 + x2) / 2} ${y2 + 14} ${x2} ${y2}" fill="none" stroke="${OUT}" stroke-width="2"/>`).join('')}
+      <path d="M 126 140 Q 140 120 170 128 Q 190 150 170 170 Q 140 176 126 140 Z" fill="#f2e2c0" stroke="${OUT}" stroke-width="2"/>
+      <ellipse cx="152" cy="150" rx="12" ry="14" fill="#6a4a2a"/>`,
+  }));
+
+  art.kouika = () => custom('コウイカ', (id) => ({
+    defs: gradient(`${id}g`, [[0, '#a87a52'], [1, '#e2c4a0']]),
+    inner: `
+      ${[-12, -6, 0, 6, 12].map((dy) => `<path d="M 80 ${100 + dy} Q 50 ${100 + dy * 1.6} 26 ${100 + dy * 2.4}" stroke="#d8a882" stroke-width="7" stroke-linecap="round" fill="none"/>`).join('')}
+      <path d="M 96 100 m -4 -52 Q 200 34 286 100 Q 200 166 92 152 Q 82 100 92 48 Z" fill="#e8d0b0" stroke="${OUT}" stroke-width="1.8"/>
+      <path d="M 100 56 Q 200 46 274 100 Q 200 154 100 144 Q 92 100 100 56 Z" fill="url(#${id}g)" stroke="${OUT}" stroke-width="2"/>
+      ${[120, 140, 160, 180, 200, 220, 240].map((x) => `<path d="M ${x} 62 q 6 38 0 76" stroke="#5a3a1e" stroke-width="3.4" fill="none" opacity="0.7"/>`).join('')}
+      <path d="M 70 84 Q 96 76 104 100 Q 96 124 70 116 Z" fill="#e2c4a0" stroke="${OUT}" stroke-width="2"/>
+      ${eye(84, 88, 5, '#3a3a3a')}${eye(84, 112, 5, '#3a3a3a')}`,
+  }));
+
+  art.iseebi = () => custom('イセエビ', (id) => ({
+    defs: gradient(`${id}g`, [[0, '#a8301e'], [1, '#d8603a']]),
+    inner: `
+      <path d="M 70 86 Q 40 30 4 10" stroke="#a8301e" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M 70 92 Q 30 60 6 70" stroke="#a8301e" stroke-width="6" fill="none" stroke-linecap="round"/>
+      ${Array.from({ length: 6 }, (_, i) => `<circle cx="${60 - i * 9}" cy="${78 - i * 11}" r="2" fill="#f2c040"/>`).join('')}
+      ${[100, 120, 140, 160].map((x) => `<path d="M ${x} 118 l -4 24 l -8 6" stroke="#c8402a" stroke-width="3.4" fill="none" stroke-linecap="round"/>`).join('')}
+      ${Array.from({ length: 5 }, (_, i) => `<rect x="${168 + i * 20}" y="${84 + i}" width="22" height="${32 - i * 2}" rx="5" fill="#c8402a" stroke="${OUT}" stroke-width="1.8"/><circle cx="${179 + i * 20}" cy="${100 + i}" r="2.4" fill="#f2d070"/>`).join('')}
+      <path d="M 266 88 L 304 74 L 306 100 L 304 126 L 266 112 Z" fill="#c8402a" stroke="${OUT}" stroke-width="1.8"/>
+      <path d="M 66 80 Q 110 66 170 80 L 170 120 Q 110 128 66 116 Z" fill="url(#${id}g)" stroke="${OUT}" stroke-width="2"/>
+      ${Array.from({ length: 16 }, (_, i) => `<path d="M ${74 + (i % 8) * 12} ${(i < 8 ? 82 : 96)} l 3 -7 l 3 7" fill="#7a1a0e" stroke="${OUT}" stroke-width="0.8"/>`).join('')}
+      <circle cx="74" cy="86" r="4" fill="#111"/>`,
+  }));
+  art.lobster = () => custom('ロブスター', (id) => ({
+    defs: gradient(`${id}g`, [[0, '#1e3a5a'], [1, '#3a6a7a']]),
+    inner: `
+      <path d="M 74 88 Q 40 40 20 30 M 74 90 Q 40 70 14 74" stroke="#2a4a6a" stroke-width="2.4" fill="none"/>
+      <path d="M 86 112 Q 66 140 60 150" stroke="#2a4a6a" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <path d="M 60 136 Q 10 130 6 160 Q 14 186 64 168 Q 40 158 36 152 Q 50 150 60 152 Z" fill="#2a5a72" stroke="${OUT}" stroke-width="2"/>
+      <path d="M 86 80 Q 70 50 62 40" stroke="#2a4a6a" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <path d="M 64 52 Q 14 46 10 22 Q 26 6 70 28 Q 46 30 40 34 Q 50 40 64 38 Z" fill="#2a5a72" stroke="${OUT}" stroke-width="2"/>
+      ${[110, 130, 150].map((x) => `<path d="M ${x} 118 l -4 22 l -8 6" stroke="#2a4a6a" stroke-width="3.4" fill="none" stroke-linecap="round"/>`).join('')}
+      ${Array.from({ length: 5 }, (_, i) => `<rect x="${170 + i * 20}" y="${84 + i}" width="22" height="${32 - i * 2}" rx="5" fill="#2a5a72" stroke="${OUT}" stroke-width="1.8"/>`).join('')}
+      <path d="M 268 88 L 306 74 L 308 100 L 306 126 L 268 112 Z" fill="#2a5a72" stroke="${OUT}" stroke-width="1.8"/>
+      <path d="M 70 84 Q 110 70 172 82 L 172 118 Q 110 128 70 114 Z" fill="url(#${id}g)" stroke="${OUT}" stroke-width="2"/>
+      ${dots(461, 20, 80, 290, 84, 116, 1, 2, '#f2c040', 0.5)}
+      <circle cx="78" cy="88" r="4" fill="#111"/>`,
+  }));
+
+  function urchin(label, o) {
+    return custom(label, (id) => {
+      const r = rng(o.seed);
+      let spines = '';
+      for (let i = 0; i < o.n; i++) {
+        const a = r() * Math.PI * 2, base = o.R * 0.9, len = o.len * (0.7 + r() * 0.5);
+        spines += `<line x1="${f(160 + Math.cos(a) * base)}" y1="${f(110 + Math.sin(a) * base * 0.75)}" x2="${f(160 + Math.cos(a) * (base + len))}" y2="${f(110 + Math.sin(a) * (base + len) * 0.75)}" stroke="${o.spineC}" stroke-width="${o.spineW}" stroke-linecap="round"/>`;
+      }
+      return {
+        defs: `<radialGradient id="${id}g" cx="0.45" cy="0.35" r="0.7"><stop offset="0" stop-color="${o.c1}"/><stop offset="1" stop-color="${o.c2}"/></radialGradient>`,
+        inner: `${spines}<ellipse cx="160" cy="110" rx="${o.R}" ry="${f(o.R * 0.75)}" fill="url(#${id}g)" stroke="${OUT}" stroke-width="2.2"/>${o.extra || ''}`,
+      };
+    });
+  }
+  art.uni = () => urchin('ムラサキウニ', { seed: 471, n: 160, R: 60, len: 26, spineW: 3, spineC: '#3a1e4a', c1: '#6a3a7a', c2: '#2a1030' });
+  art.gangaze = () => urchin('ガンガゼ', {
+    seed: 481, n: 60, R: 36, len: 110, spineW: 2, spineC: '#14141a', c1: '#3a3a44', c2: '#0e0e14',
+    extra: '<circle cx="160" cy="98" r="9" fill="#f08a2a" stroke="#111" stroke-width="2"/><circle cx="160" cy="98" r="3.5" fill="#111"/>',
+  });
+
   return {
     render(key) {
       if (!art[key]) throw new Error(`unknown fish: ${key}`);

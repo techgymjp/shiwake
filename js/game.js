@@ -432,15 +432,34 @@
         <figure>${FishArt.render(pair.a.art)}<figcaption>${pair.a.name}</figcaption></figure>
         <figure>${FishArt.render(pair.b.art)}<figcaption>${pair.b.name}</figcaption></figure>
       </div>
-      <p class="point">${pair.point}</p>
+      <p class="point"><span class="lv" data-level="${pair.level}">${LEVELS[pair.level].stars}</span>${pair.point}</p>
     </article>`;
   }
 
   // ---------- 図鑑 ----------
-  function renderZukan() {
-    Sound.play('tap');
-    $('zukan').innerHTML = FISH_PAIRS.map(pairCard).join('');
+  function renderZukan(genre = 'all') {
+    const tabs = $('zukan-tabs');
+    tabs.innerHTML = '';
+    GENRES.forEach((g) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'genre';
+      btn.setAttribute('role', 'tab');
+      btn.setAttribute('aria-checked', String(g.id === genre));
+      btn.setAttribute('aria-selected', String(g.id === genre));
+      btn.innerHTML = `<span class="icon">${g.icon}</span>${g.label}<small>${poolOf(g.id).length}組</small>`;
+      btn.addEventListener('click', () => { Sound.play('tap'); renderZukan(g.id); });
+      tabs.appendChild(btn);
+    });
+    // やさしい順に並べる
+    const pairs = poolOf(genre).slice().sort((a, b) => a.level - b.level);
+    $('zukan').innerHTML = pairs.map(pairCard).join('');
     $('zukan-count').textContent = `全${FISH_PAIRS.length}組`;
+  }
+
+  function showZukan() {
+    Sound.play('tap');
+    renderZukan();
     show('zukan');
   }
 
@@ -464,7 +483,7 @@
   $('btn-retry').addEventListener('click', start);
   $('btn-next').addEventListener('click', next);
   $('btn-home').addEventListener('click', () => { Sound.play('tap'); renderTitle(); });
-  $('btn-zukan').addEventListener('click', renderZukan);
+  $('btn-zukan').addEventListener('click', showZukan);
   $('btn-ranking').addEventListener('click', () => showRanking(state.genre));
   $('btn-result-ranking').addEventListener('click', () => showRanking(state.genre));
   $('btn-ranking-back').addEventListener('click', () => { Sound.play('tap'); renderTitle(); });

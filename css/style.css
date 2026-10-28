@@ -641,3 +641,19 @@ body {
   .ranking .time { grid-column: 2 / 4; text-align: left; font-size: .85rem; }
   .ranking .time small { display: inline; margin-left: 6px; }
 }
+
+/* 図鑑 */
+#zukan-tabs { margin-bottom: 18px; }
+.point .lv {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 0 8px;
+  font-size: .8rem;
+  color: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  text-shadow: 1px 1px 0 var(--ink);
+}
+.point .lv[data-level="1"] { background: var(--cyan); }
+.point .lv[data-level="2"] { background: var(--orange); }
+.point .lv[data-level="3"] { background: var(--purple); }
