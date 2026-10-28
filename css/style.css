@@ -574,3 +574,70 @@ body {
 .share-btn.more { background: var(--purple); }
 .share-btn.copy { background: var(--paper); color: var(--ink); }
 .share-toast { min-height: 1.4em; margin: 10px 0 0; font-weight: 800; color: var(--ok); }
+
+/* ---------- ランキング ---------- */
+.name-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-weight: 900;
+}
+.name-field input {
+  width: 11em;
+  font: inherit;
+  font-weight: 800;
+  padding: 6px 12px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.name-field input:focus { outline: 3px solid var(--yellow); outline-offset: 2px; }
+
+.ranking-note { text-align: center; margin: -8px 0 14px; font-weight: 800; color: var(--muted); font-size: .9rem; }
+.ranking {
+  max-width: 640px;
+  margin: 18px auto 0;
+  background: var(--paper);
+  border: 4px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.ranking ol { list-style: none; margin: 0; padding: 0; }
+.ranking li {
+  display: grid;
+  grid-template-columns: 2.6em 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 2px dashed #d5dbe6;
+}
+.ranking li:last-child { border-bottom: 0; }
+.ranking li:nth-child(1) { background: #fff6cc; }
+.ranking li.latest { background: #ffe1ec; animation: pop-in .4s; }
+.ranking .pos { font-size: 1.5rem; font-weight: 900; text-align: center; }
+.ranking .who { font-weight: 900; overflow-wrap: anywhere; }
+.ranking small { display: block; font-size: .72rem; font-weight: 800; color: var(--muted); }
+.ranking .pts { font-size: 1.4rem; font-weight: 900; text-align: right; }
+.ranking .pts small { display: inline; font-size: .85rem; }
+.ranking .time { font-weight: 900; text-align: right; font-variant-numeric: tabular-nums; }
+.ranking .empty { margin: 0; padding: 28px 16px; text-align: center; font-weight: 800; }
+.btn.danger { background: #ffe1e1; color: var(--ng); }
+
+.result-time { margin: 0 0 8px; font-weight: 900; font-size: 1.1rem; }
+.rank-in {
+  margin: 0 auto 14px;
+  font-weight: 900;
+  color: var(--pink);
+  font-size: 1.15rem;
+  animation: throb .8s ease-in-out infinite;
+}
+
+@media (max-width: 520px) {
+  .ranking li { grid-template-columns: 2.2em 1fr auto; gap: 6px; padding: 9px 10px; }
+  .ranking .time { grid-column: 2 / 4; text-align: left; font-size: .85rem; }
+  .ranking .time small { display: inline; margin-left: 6px; }
+}

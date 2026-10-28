@@ -41,8 +41,12 @@
       <p class="genre-title">ジャンルをえらぶ</p>
       <div class="genres" id="genres" role="radiogroup" aria-label="ジャンル"></div>
       <p class="genre-note">問題は「やさしい」から「むずかしい」の順に出ます</p>
+      <label class="name-field">板前の名前
+        <input type="text" id="player-name" maxlength="10" placeholder="名無しの板前" autocomplete="nickname">
+      </label>
       <div class="menu">
         <button class="btn primary big" id="btn-start">板場に立つ！（10問）</button>
+        <button class="btn" id="btn-ranking">🏆 ランキング</button>
         <button class="btn" id="btn-zukan">📖 見分け図鑑</button>
       </div>
       <p class="best" id="best-score"></p>
@@ -76,7 +80,9 @@
       <h2 class="result-title">本日の仕分け結果</h2>
       <p class="result-genre" id="r-genre"></p>
       <p class="result-score"><span id="r-score">0</span><small> / <span id="r-total">10</span></small></p>
+      <p class="result-time" id="r-time"></p>
       <p class="rank" id="r-rank"></p>
+      <p class="rank-in" id="r-rankin" hidden></p>
       <div class="chef-row">
         <div class="chef" id="result-chef"></div>
         <p class="bubble" id="r-msg"></p>
@@ -96,7 +102,20 @@
       <div class="review" id="review"></div>
       <div class="menu">
         <button class="btn primary big" id="btn-retry">もう一回！</button>
+        <button class="btn" id="btn-result-ranking">🏆 ランキング</button>
         <button class="btn" id="btn-home">のれんへ戻る</button>
+      </div>
+    </section>
+
+    <!-- ランキング -->
+    <section id="screen-ranking" class="screen">
+      <h2 class="zukan-title">🏆 ランキング</h2>
+      <p class="ranking-note">この端末での記録です（ジャンルごとに上位10件）</p>
+      <div class="genres" id="ranking-tabs" role="tablist" aria-label="ジャンル"></div>
+      <div class="ranking" id="ranking-list"></div>
+      <div class="menu">
+        <button class="btn" id="btn-ranking-back">のれんへ戻る</button>
+        <button class="btn danger" id="btn-ranking-clear">記録を消す</button>
       </div>
     </section>
 
@@ -115,6 +134,7 @@
   <script src="js/fish.js"></script>
   <script src="js/data.js"></script>
   <script src="js/sound.js"></script>
+  <script src="js/ranking.js"></script>
   <script src="js/game.js"></script>
 </body>
 </html>

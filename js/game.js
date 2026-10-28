@@ -10,7 +10,7 @@
   const LEVEL_MIX = { 1: 0.3, 2: 0.4, 3: 0.3 };
 
   const $ = (id) => document.getElementById(id);
-  const state = { list: [], index: 0, score: 0, combo: 0, answered: false, misses: [], marks: [], genre: loadGenre() };
+  const state = { list: [], index: 0, score: 0, combo: 0, answered: false, misses: [], marks: [], time: 0, shownAt: 0, lastRecord: null, rankingGenre: 'all', genre: loadGenre() };
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
   function shuffle(arr) {
@@ -152,8 +152,11 @@
     });
     const n = countOf(state.genre);
     $('btn-start').textContent = `板場に立つ！（${n}問）`;
+    const top = Ranking.list(state.genre)[0];
     const best = loadBest(state.genre);
-    $('best-score').textContent = best ? `🏆 ${genreOf(state.genre).label}のベスト：${best} / ${n}` : '';
+    $('best-score').textContent = top
+      ? `🏆 ${genreOf(state.genre).label}の1位：${top.score} / ${top.total}（${Ranking.formatTime(top.time)}）`
+      : best ? `🏆 ${genreOf(state.genre).label}のベスト：${best} / ${n}` : '';
   }
 
   // 出題する組を選ぶ：難易度がまんべんなく混ざるように選び、やさしい順に並べる
@@ -184,6 +187,7 @@
     state.combo = 0;
     state.misses = [];
     state.marks = [];
+    state.time = 0;
     show('quiz');
     renderQuestion();
   }
@@ -227,11 +231,14 @@
       box.appendChild(btn);
     });
     $('feedback').hidden = true;
+    state.shownAt = performance.now();
   }
 
   function answer(i) {
     if (state.answered) return;
     state.answered = true;
+    // タイムは「問題が出てから答えるまで」の合計（解説を読む時間は含めない）
+    state.time += performance.now() - state.shownAt;
     const q = state.list[state.index];
     const ok = i === q.answer;
     const cards = [...$('choices').children];
@@ -299,6 +306,13 @@
     $('r-msg').textContent = rank.msg;
     $('r-genre').textContent = `${genreOf(state.genre).icon} ${genreOf(state.genre).label}`;
     if (score > loadBest(state.genre)) saveBest(state.genre, score);
+    $('r-time').textContent = `⏱ タイム ${Ranking.formatTime(state.time)}`;
+    const name = Ranking.getName() || Ranking.DEFAULT_NAME;
+    const rec = Ranking.add(state.genre, { name, score, total, time: Math.round(state.time), title: rank.title });
+    state.lastRecord = rec.id;
+    const rankIn = $('r-rankin');
+    rankIn.hidden = !rec.rank;
+    rankIn.textContent = rec.rank === 1 ? '🎉 ランキング 1位 更新！' : `ランキング ${rec.rank}位 にランクイン！`;
     setupShare(rank);
 
     $('review').innerHTML = state.misses.length
@@ -330,7 +344,7 @@
     const genre = genreOf(state.genre);
     const marks = state.marks.map((ok) => (ok ? '⭕' : '❌')).join('');
     $('share-marks').textContent = marks;
-    shareText = `魚仕分け【${genre.label}】で ${state.score}/${state.list.length}問正解！\n称号：${rank.title}\n${marks}`;
+    shareText = `魚仕分け【${genre.label}】で ${state.score}/${state.list.length}問正解！（${Ranking.formatTime(state.time)}）\n称号：${rank.title}\n${marks}`;
     const url = shareUrl();
     const enc = encodeURIComponent;
     $('share-x').href = `https://twitter.com/intent/tweet?text=${enc(shareText)}&url=${enc(url)}&hashtags=${enc(HASHTAG)}`;
@@ -373,6 +387,45 @@
   $('share-copy').addEventListener('click', () => { Sound.play('tap'); copyShare(); });
   $('share-native').addEventListener('click', () => { Sound.play('tap'); nativeShare(); });
 
+  // ---------- ランキング ----------
+  const MEDALS = ['🥇', '🥈', '🥉'];
+  const escapeHtml = (s) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+  function renderRanking(genre = state.rankingGenre) {
+    state.rankingGenre = genre;
+    const tabs = $('ranking-tabs');
+    tabs.innerHTML = '';
+    GENRES.forEach((g) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'genre';
+      btn.setAttribute('role', 'tab');
+      btn.setAttribute('aria-checked', String(g.id === genre));
+      btn.setAttribute('aria-selected', String(g.id === genre));
+      btn.innerHTML = `<span class="icon">${g.icon}</span>${g.label}`;
+      btn.addEventListener('click', () => { Sound.play('tap'); renderRanking(g.id); });
+      tabs.appendChild(btn);
+    });
+
+    const rows = Ranking.list(genre);
+    $('ranking-list').innerHTML = rows.length
+      ? `<ol>${rows.map((r, i) => `
+          <li class="${r.id === state.lastRecord ? 'latest' : ''}">
+            <span class="pos">${MEDALS[i] || `${i + 1}`}</span>
+            <span class="who">${escapeHtml(r.name)}<small>${escapeHtml(r.title)}</small></span>
+            <span class="pts">${r.score}<small>/${r.total}</small></span>
+            <span class="time">${Ranking.formatTime(r.time)}<small>${Ranking.formatDate(r.date)}</small></span>
+          </li>`).join('')}</ol>`
+      : '<p class="empty">まだ記録がないよ。板場に立ってみよう！</p>';
+    $('btn-ranking-clear').hidden = !rows.length;
+  }
+
+  function showRanking(genre) {
+    Sound.play('tap');
+    renderRanking(genre);
+    show('ranking');
+  }
+
   function pairCard(pair) {
     return `<article class="pair">
       <div class="pair-fish">
@@ -412,6 +465,18 @@
   $('btn-next').addEventListener('click', next);
   $('btn-home').addEventListener('click', () => { Sound.play('tap'); renderTitle(); });
   $('btn-zukan').addEventListener('click', renderZukan);
+  $('btn-ranking').addEventListener('click', () => showRanking(state.genre));
+  $('btn-result-ranking').addEventListener('click', () => showRanking(state.genre));
+  $('btn-ranking-back').addEventListener('click', () => { Sound.play('tap'); renderTitle(); });
+  $('btn-ranking-clear').addEventListener('click', () => {
+    const g = genreOf(state.rankingGenre);
+    if (!confirm(`「${g.label}」のランキングを消しますか？`)) return;
+    Ranking.clear(state.rankingGenre);
+    renderRanking();
+  });
+  const nameInput = $('player-name');
+  nameInput.value = Ranking.getName();
+  nameInput.addEventListener('input', () => Ranking.setName(nameInput.value));
   $('btn-zukan-back').addEventListener('click', () => { Sound.play('tap'); renderTitle(); });
   document.addEventListener('keydown', (e) => {
     if (!$('screen-quiz').classList.contains('active')) return;
