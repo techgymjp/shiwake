@@ -10,7 +10,7 @@
   const LEVEL_MIX = { 1: 0.3, 2: 0.4, 3: 0.3 };
 
   const $ = (id) => document.getElementById(id);
-  const state = { list: [], index: 0, score: 0, combo: 0, answered: false, misses: [], genre: loadGenre() };
+  const state = { list: [], index: 0, score: 0, combo: 0, answered: false, misses: [], marks: [], genre: loadGenre() };
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
   function shuffle(arr) {
@@ -183,6 +183,7 @@
     state.score = 0;
     state.combo = 0;
     state.misses = [];
+    state.marks = [];
     show('quiz');
     renderQuestion();
   }
@@ -246,12 +247,14 @@
     if (ok) {
       state.score++;
       state.combo++;
+      state.marks.push(true);
       Sound.play('correct', state.combo);
       confetti(cards[i], state.combo >= 3 ? 40 : 24);
       line = fill(state.combo >= 3 ? pick(COMBO_PRAISES) : pick(PRAISES), { n: q.options[q.answer].name, c: state.combo });
     } else {
       state.combo = 0;
       state.misses.push(q.pair);
+      state.marks.push(false);
       Sound.play('wrong');
       line = fill(pick(SCOLDS), { w: q.options[i].name });
     }
@@ -296,6 +299,7 @@
     $('r-msg').textContent = rank.msg;
     $('r-genre').textContent = `${genreOf(state.genre).icon} ${genreOf(state.genre).label}`;
     if (score > loadBest(state.genre)) saveBest(state.genre, score);
+    setupShare(rank);
 
     $('review').innerHTML = state.misses.length
       ? `<h3>まちがえた魚をおさらい</h3>${state.misses.map(pairCard).join('')}`
@@ -312,6 +316,62 @@
       if (score === total) setTimeout(() => confetti(null, 80), 500);
     }
   }
+
+  // ---------- SNS シェア ----------
+  const SITE_URL = 'https://techgymjp.github.io/shiwake/';
+  const HASHTAG = '魚仕分け';
+  let shareText = '';
+
+  function shareUrl() {
+    return /^https?:/.test(location.protocol) ? location.origin + location.pathname : SITE_URL;
+  }
+
+  function setupShare(rank) {
+    const genre = genreOf(state.genre);
+    const marks = state.marks.map((ok) => (ok ? '⭕' : '❌')).join('');
+    $('share-marks').textContent = marks;
+    shareText = `魚仕分け【${genre.label}】で ${state.score}/${state.list.length}問正解！\n称号：${rank.title}\n${marks}`;
+    const url = shareUrl();
+    const enc = encodeURIComponent;
+    $('share-x').href = `https://twitter.com/intent/tweet?text=${enc(shareText)}&url=${enc(url)}&hashtags=${enc(HASHTAG)}`;
+    $('share-line').href = `https://line.me/R/msg/text/?${enc(`${shareText}\n${url}`)}`;
+    $('share-fb').href = `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`;
+    $('share-native').hidden = !navigator.share;
+    $('share-toast').textContent = '';
+  }
+
+  function toast(msg) {
+    const el = $('share-toast');
+    el.textContent = msg;
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(() => { el.textContent = ''; }, 2500);
+  }
+
+  async function copyShare() {
+    const text = `${shareText}\n${shareUrl()} #${HASHTAG}`;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // クリップボード API が使えない環境向け
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    toast('コピーしました！');
+  }
+
+  async function nativeShare() {
+    try {
+      await navigator.share({ title: '魚仕分け', text: `${shareText}\n#${HASHTAG}`, url: shareUrl() });
+    } catch { /* キャンセルされたときは何もしない */ }
+  }
+
+  ['share-x', 'share-line', 'share-fb'].forEach((id) => $(id).addEventListener('click', () => Sound.play('tap')));
+  $('share-copy').addEventListener('click', () => { Sound.play('tap'); copyShare(); });
+  $('share-native').addEventListener('click', () => { Sound.play('tap'); nativeShare(); });
 
   function pairCard(pair) {
     return `<article class="pair">
