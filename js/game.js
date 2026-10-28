@@ -332,12 +332,13 @@
   }
 
   // ---------- SNS シェア ----------
-  const SITE_URL = 'https://techgymjp.github.io/shiwake/';
+  // シェアするリンク先（ゲームの紹介記事）
+  const SHARE_URL = 'https://techgym.jp/column/claude-code-game-shiwake/';
   const HASHTAG = '魚仕分け';
   let shareText = '';
 
   function shareUrl() {
-    return /^https?:/.test(location.protocol) ? location.origin + location.pathname : SITE_URL;
+    return SHARE_URL;
   }
 
   function setupShare(rank) {
