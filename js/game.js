@@ -5,9 +5,12 @@
 (() => {
   const QUESTIONS = 10;
   const BEST_KEY = 'shiwake.best';
+  const GENRE_KEY = 'shiwake.genre';
+  // 10問のうち、やさしい・ふつう・むずかしいを出す割合
+  const LEVEL_MIX = { 1: 0.3, 2: 0.4, 3: 0.3 };
 
   const $ = (id) => document.getElementById(id);
-  const state = { list: [], index: 0, score: 0, combo: 0, answered: false, misses: [] };
+  const state = { list: [], index: 0, score: 0, combo: 0, answered: false, misses: [], genre: loadGenre() };
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
   function shuffle(arr) {
@@ -31,6 +34,8 @@
   const PRAISES = ['いい目してるねぇ！', 'お見事！それが{n}だ！', 'よっ、目利き！', 'さすがだ、わかってるねぇ！', 'そうそう、それだよ！'];
   const COMBO_PRAISES = ['{c}連続！こいつぁ大したもんだ！', '{c}連続正解！板前の素質ありだな！'];
   const SCOLDS = ['おいおい、そいつは{w}だ！', 'ちがうちがう、それは{w}だよ！', 'あちゃー、それは{w}だ。よく見な！'];
+
+  const LEVEL_UP = { 2: 'ここから少し難しくなるぞ。', 3: 'さあ、ここからは上級編だ！' };
 
   const fill = (tpl, vars) => tpl.replace(/\{(\w)\}/g, (_, k) => vars[k]);
 
@@ -78,12 +83,24 @@
     window.scrollTo(0, 0);
   }
 
-  function loadBest() {
-    try { return Number(localStorage.getItem(BEST_KEY)) || 0; } catch { return 0; }
+  // ベストスコアはジャンルごとに保存（「ぜんぶ」は以前のキーをそのまま使う）
+  const bestKey = (genre) => (genre === 'all' ? BEST_KEY : `${BEST_KEY}.${genre}`);
+  function loadBest(genre) {
+    try { return Number(localStorage.getItem(bestKey(genre))) || 0; } catch { return 0; }
   }
-  function saveBest(v) {
-    try { localStorage.setItem(BEST_KEY, String(v)); } catch { /* 保存できなくても遊べる */ }
+  function saveBest(genre, v) {
+    try { localStorage.setItem(bestKey(genre), String(v)); } catch { /* 保存できなくても遊べる */ }
   }
+  function loadGenre() {
+    try {
+      const g = localStorage.getItem(GENRE_KEY);
+      return GENRES.some((x) => x.id === g) ? g : 'all';
+    } catch { return 'all'; }
+  }
+
+  const genreOf = (id) => GENRES.find((g) => g.id === id);
+  const poolOf = (genre) => FISH_PAIRS.filter((p) => genre === 'all' || p.genre === genre);
+  const countOf = (genre) => Math.min(QUESTIONS, poolOf(genre).length);
 
   // ---------- 紙吹雪 ----------
   const COLORS = ['#ff5c8a', '#ffd23f', '#3ec6e0', '#3ddc84', '#ff9f43', '#9b6dff'];
@@ -110,16 +127,57 @@
     const pair = pick(FISH_PAIRS);
     $('title-fish').innerHTML = `<div>${FishArt.render(pair.a.art)}</div><span class="vs">VS</span><div>${FishArt.render(pair.b.art)}</div>`;
     $('title-chef').innerHTML = chefSvg('happy');
-    const best = loadBest();
-    $('best-score').textContent = best ? `🏆 ベストスコア：${best} / ${QUESTIONS}` : '';
+    renderGenres();
     show('title');
+  }
+
+  // ---------- ジャンル選び ----------
+  function renderGenres() {
+    const box = $('genres');
+    box.innerHTML = '';
+    GENRES.forEach((g) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'genre';
+      btn.setAttribute('role', 'radio');
+      btn.setAttribute('aria-checked', String(g.id === state.genre));
+      btn.innerHTML = `<span class="icon">${g.icon}</span>${g.label}<small>${poolOf(g.id).length}組</small>`;
+      btn.addEventListener('click', () => {
+        state.genre = g.id;
+        try { localStorage.setItem(GENRE_KEY, g.id); } catch { /* 保存できなくても遊べる */ }
+        Sound.play('tap');
+        renderGenres();
+      });
+      box.appendChild(btn);
+    });
+    const n = countOf(state.genre);
+    $('btn-start').textContent = `板場に立つ！（${n}問）`;
+    const best = loadBest(state.genre);
+    $('best-score').textContent = best ? `🏆 ${genreOf(state.genre).label}のベスト：${best} / ${n}` : '';
+  }
+
+  // 出題する組を選ぶ：難易度がまんべんなく混ざるように選び、やさしい順に並べる
+  function choosePairs(genre) {
+    const pool = shuffle(poolOf(genre));
+    const n = countOf(genre);
+    const chosen = [];
+    for (const lv of [1, 2, 3]) {
+      const quota = Math.round(n * LEVEL_MIX[lv]);
+      chosen.push(...pool.filter((p) => p.level === lv).slice(0, quota));
+    }
+    // 足りない分は残りから補う（ジャンルによっては難易度が偏るため）
+    for (const p of pool) {
+      if (chosen.length >= n) break;
+      if (!chosen.includes(p)) chosen.push(p);
+    }
+    return chosen.slice(0, n).sort((a, b) => a.level - b.level);
   }
 
   // ---------- クイズ ----------
   function start() {
     Sound.play('start');
     Sound.startBgm();
-    const pairs = shuffle(FISH_PAIRS).slice(0, Math.min(QUESTIONS, FISH_PAIRS.length));
+    const pairs = choosePairs(state.genre);
     state.list = pairs.map((pair) => ({ pair, options: shuffle([pair.a, pair.b]), answer: Math.random() < 0.5 ? 0 : 1 }));
     state.index = 0;
     state.score = 0;
@@ -132,6 +190,10 @@
   function updateStatus() {
     $('q-count').textContent = `${state.index + 1} / ${state.list.length}`;
     $('q-score').textContent = `正解 ${state.score}`;
+    const level = LEVELS[state.list[state.index].pair.level];
+    $('q-level').textContent = level.stars;
+    $('q-level').title = level.label;
+    $('q-level').dataset.level = state.list[state.index].pair.level;
     const combo = $('q-combo');
     combo.hidden = state.combo < 2;
     combo.textContent = `🔥 ${state.combo}連続`;
@@ -144,7 +206,10 @@
     updateStatus();
     $('progress-bar').style.width = `${(state.index / state.list.length) * 100}%`;
 
-    const order = pick(ORDERS);
+    // 難易度が上がったところで大将がひとこと
+    const prev = state.list[state.index - 1];
+    const intro = prev && prev.pair.level < q.pair.level ? LEVEL_UP[q.pair.level] : '';
+    const order = intro + pick(ORDERS);
     $('question').innerHTML = fill(order, { n: `<span class="target">${target.name}</span>` });
     setChef('quiz-chef', 'normal');
     Sound.say(fill(order, { n: target.name }));
@@ -229,7 +294,8 @@
     $('r-total').textContent = total;
     $('r-rank').textContent = rank.title;
     $('r-msg').textContent = rank.msg;
-    if (score > loadBest()) saveBest(score);
+    $('r-genre').textContent = `${genreOf(state.genre).icon} ${genreOf(state.genre).label}`;
+    if (score > loadBest(state.genre)) saveBest(state.genre, score);
 
     $('review').innerHTML = state.misses.length
       ? `<h3>まちがえた魚をおさらい</h3>${state.misses.map(pairCard).join('')}`

@@ -305,4 +305,78 @@ const FISH_PAIRS = [
   },
 ];
 
+/*
+ * ジャンルと難易度（1:やさしい 2:ふつう 3:むずかしい）
+ */
+const GENRES = [
+  { id: 'all', label: 'ぜんぶ', icon: '🎲' },
+  { id: 'sushi', label: '寿司ネタ・市場', icon: '🍣' },
+  { id: 'iso', label: '磯・沿岸', icon: '🌊' },
+  { id: 'river', label: '川・池', icon: '🏞️' },
+  { id: 'shell', label: 'イカ・エビ・貝', icon: '🦑' },
+];
+
+const LEVELS = {
+  1: { label: 'やさしい', stars: '★☆☆' },
+  2: { label: 'ふつう', stars: '★★☆' },
+  3: { label: 'むずかしい', stars: '★★★' },
+};
+
+const PAIR_META = {
+  'anago-unagi': ['sushi', 1],
+  'hirame-karei': ['sushi', 2],
+  'maguro-katsuo': ['sushi', 1],
+  'aji-saba': ['sushi', 1],
+  'sanma-sayori': ['sushi', 1],
+  'madai-kurodai': ['sushi', 1],
+  'buri-kanpachi': ['sushi', 2],
+  'maiwashi-katakuchi': ['sushi', 2],
+  'buri-hiramasa': ['sushi', 3],
+  'aji-shimaaji': ['sushi', 2],
+  'aji-muroaji': ['sushi', 3],
+  'saba-gomasaba': ['sushi', 3],
+  'katsuo-souda': ['sushi', 3],
+  'maguro-kihada': ['sushi', 2],
+  'maguro-kajiki': ['sushi', 1],
+  'madai-chidai': ['sushi', 3],
+  'kinmedai-kinki': ['sushi', 2],
+  'hokke-shimahokke': ['sushi', 2],
+  'madara-suketou': ['sushi', 3],
+  'kamasu-sawara': ['sushi', 2],
+  'maiwashi-nishin': ['sushi', 2],
+  'karei-shitabirame': ['sushi', 2],
+  'fugu-kawahagi': ['iso', 1],
+  'same-iruka': ['iso', 1],
+  'tachiuo-hamo': ['iso', 2],
+  'unagi-utsubo': ['iso', 1],
+  'ishidai-ishigaki': ['iso', 1],
+  'mebaru-kasago': ['iso', 2],
+  'suzuki-bora': ['iso', 2],
+  'kisu-haze': ['iso', 1],
+  'houbou-kanagashira': ['iso', 3],
+  'tobiuo-houbou': ['iso', 1],
+  'hirame-ei': ['iso', 1],
+  'ankou-okoze': ['iso', 2],
+  'kawahagi-umazura': ['iso', 2],
+  'fugu-harisenbon': ['iso', 1],
+  'koi-funa': ['river', 2],
+  'sake-nijimasu': ['river', 1],
+  'ayu-wakasagi': ['river', 2],
+  'namazu-dojou': ['river', 1],
+  'medaka-kadayashi': ['river', 3],
+  'funa-kingyo': ['river', 1],
+  'bass-bluegill': ['river', 1],
+  'yamame-amago': ['river', 3],
+  'iwana-yamame': ['river', 2],
+  'ika-tako': ['shell', 1],
+  'ebi-shako': ['shell', 1],
+  'hotate-kaki': ['shell', 1],
+  'hamaguri-asari': ['shell', 2],
+  'sazae-awabi': ['shell', 1],
+};
+
+FISH_PAIRS.forEach((p) => {
+  [p.genre, p.level] = PAIR_META[p.id];
+});
+
 if (typeof module !== 'undefined') module.exports = FISH_PAIRS;

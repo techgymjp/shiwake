@@ -31,6 +31,9 @@
         <p class="bubble">へい、らっしゃい！<br>おまえさんの<strong>目利き</strong>の腕前、<br>見せてもらおうか！</p>
       </div>
       <div class="title-fish" id="title-fish"></div>
+      <p class="genre-title">ジャンルをえらぶ</p>
+      <div class="genres" id="genres" role="radiogroup" aria-label="ジャンル"></div>
+      <p class="genre-note">問題は「やさしい」から「むずかしい」の順に出ます</p>
       <div class="menu">
         <button class="btn primary big" id="btn-start">板場に立つ！（10問）</button>
         <button class="btn" id="btn-zukan">📖 見分け図鑑</button>
@@ -43,6 +46,7 @@
       <header class="quiz-head">
         <div class="status">
           <span class="chip" id="q-count">1 / 10</span>
+          <span class="chip level" id="q-level"></span>
           <span class="chip score" id="q-score">正解 0</span>
           <span class="chip combo" id="q-combo" hidden></span>
         </div>
@@ -63,6 +67,7 @@
     <!-- 結果 -->
     <section id="screen-result" class="screen">
       <h2 class="result-title">本日の仕分け結果</h2>
+      <p class="result-genre" id="r-genre"></p>
       <p class="result-score"><span id="r-score">0</span><small> / <span id="r-total">10</span></small></p>
       <p class="rank" id="r-rank"></p>
       <div class="chef-row">
