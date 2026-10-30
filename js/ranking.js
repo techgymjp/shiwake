@@ -6,7 +6,6 @@ const Ranking = (() => {
   const KEY = 'shiwake.records';
   const NAME_KEY = 'shiwake.name';
   const MAX = 10;
-  const DEFAULT_NAME = '名無しの板前';
 
   function loadAll() {
     try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; }
@@ -44,11 +43,12 @@ const Ranking = (() => {
     try { localStorage.setItem(NAME_KEY, name.trim().slice(0, 10)); } catch { /* 保存できなくても遊べる */ }
   }
 
-  // 83456ms → "1分23.5秒"
-  function formatTime(ms) {
+  // 83456ms → "1分23.5秒"（英語は "1m 23.5s"）
+  function formatTime(ms, lang = 'ja') {
     const total = Math.round(ms / 100) / 10;
     const m = Math.floor(total / 60);
     const s = (total - m * 60).toFixed(1);
+    if (lang === 'en') return m ? `${m}m ${s.padStart(4, '0')}s` : `${s}s`;
     return m ? `${m}分${s.padStart(4, '0')}秒` : `${s}秒`;
   }
 
@@ -57,5 +57,5 @@ const Ranking = (() => {
     return `${d.getMonth() + 1}/${d.getDate()}`;
   }
 
-  return { list, add, clear, getName, setName, formatTime, formatDate, MAX, DEFAULT_NAME };
+  return { list, add, clear, getName, setName, formatTime, formatDate, MAX };
 })();

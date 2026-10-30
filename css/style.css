@@ -657,3 +657,15 @@ body {
 .point .lv[data-level="1"] { background: var(--cyan); }
 .point .lv[data-level="2"] { background: var(--orange); }
 .point .lv[data-level="3"] { background: var(--purple); }
+
+/* ---------- 言語切り替え ---------- */
+.toggle.lang { background: var(--cyan); color: #fff; text-shadow: 1px 1px 0 var(--ink); }
+.logo-sub {
+  margin: -6px 0 14px;
+  font-weight: 900;
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+.logo-sub:empty { display: none; }
+html[lang="en"] .bubble { line-height: 1.45; }
+html[lang="en"] .card .name { font-size: 1rem; line-height: 1.25; }

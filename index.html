@@ -7,10 +7,11 @@
   <meta name="description" content="寿司屋の大将の注文にこたえて、そっくりな2匹の魚から正しい方を選ぶ2択クイズゲーム。">
   <meta property="og:type" content="website">
   <meta property="og:title" content="魚仕分け｜そっくりな魚、正しいのはどっち？">
-  <meta property="og:description" content="寿司屋の大将の注文にこたえて、そっくりな2匹の魚から正しい方を選ぶ2択クイズ。全50組、目利きの腕だめし！">
+  <meta property="og:description" content="寿司屋の大将の注文にこたえて、そっくりな2匹の魚から正しい方を選ぶ2択クイズ。全100組、目利きの腕だめし！">
   <meta property="og:url" content="https://techgymjp.github.io/shiwake/">
   <meta property="og:image" content="https://techgymjp.github.io/shiwake/img/ogp.png">
   <meta property="og:locale" content="ja_JP">
+  <meta property="og:locale:alternate" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,9 +24,10 @@
   </div>
 
   <div class="sound-toggles">
-    <button type="button" class="toggle" id="tg-bgm" aria-pressed="true">♪ BGM</button>
-    <button type="button" class="toggle" id="tg-se" aria-pressed="true">🔔 効果音</button>
-    <button type="button" class="toggle" id="tg-voice" aria-pressed="true">🗣 声</button>
+    <button type="button" class="toggle lang" id="tg-lang" data-i18n="langToggle">English</button>
+    <button type="button" class="toggle" id="tg-bgm" aria-pressed="true" data-i18n="bgm">♪ BGM</button>
+    <button type="button" class="toggle" id="tg-se" aria-pressed="true" data-i18n="se">🔔 効果音</button>
+    <button type="button" class="toggle" id="tg-voice" aria-pressed="true" data-i18n="voice">🗣 声</button>
   </div>
 
   <main id="app">
@@ -33,21 +35,22 @@
     <section id="screen-title" class="screen active">
       <div class="noren" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
       <h1 class="logo"><span>魚</span><span>仕</span><span>分</span><span>け</span></h1>
+      <p class="logo-sub" data-i18n="logoSub"></p>
       <div class="chef-row">
         <div class="chef" id="title-chef"></div>
-        <p class="bubble">へい、らっしゃい！<br>おまえさんの<strong>目利き</strong>の腕前、<br>見せてもらおうか！</p>
+        <p class="bubble" data-i18n-html="welcome">へい、らっしゃい！<br>おまえさんの<strong>目利き</strong>の腕前、<br>見せてもらおうか！</p>
       </div>
       <div class="title-fish" id="title-fish"></div>
-      <p class="genre-title">ジャンルをえらぶ</p>
-      <div class="genres" id="genres" role="radiogroup" aria-label="ジャンル"></div>
-      <p class="genre-note">問題は「やさしい」から「むずかしい」の順に出ます</p>
-      <label class="name-field">板前の名前
-        <input type="text" id="player-name" maxlength="10" placeholder="名無しの板前" autocomplete="nickname">
+      <p class="genre-title" data-i18n="genreTitle">ジャンルをえらぶ</p>
+      <div class="genres" id="genres" role="radiogroup" aria-label="ジャンル" data-i18n-aria="genreAria"></div>
+      <p class="genre-note" data-i18n="genreNote">問題は「やさしい」から「むずかしい」の順に出ます</p>
+      <label class="name-field"><span data-i18n="nameLabel">板前の名前</span>
+        <input type="text" id="player-name" maxlength="10" placeholder="名無しの板前" data-i18n-placeholder="defaultName" autocomplete="nickname">
       </label>
       <div class="menu">
         <button class="btn primary big" id="btn-start">板場に立つ！（10問）</button>
-        <button class="btn" id="btn-ranking">🏆 ランキング</button>
-        <button class="btn" id="btn-zukan">📖 見分け図鑑</button>
+        <button class="btn" id="btn-ranking" data-i18n="rankingBtn">🏆 ランキング</button>
+        <button class="btn" id="btn-zukan" data-i18n="zukanBtn">📖 見分け図鑑</button>
       </div>
       <p class="best" id="best-score"></p>
     </section>
@@ -77,7 +80,7 @@
 
     <!-- 結果 -->
     <section id="screen-result" class="screen">
-      <h2 class="result-title">本日の仕分け結果</h2>
+      <h2 class="result-title" data-i18n="resultTitle">本日の仕分け結果</h2>
       <p class="result-genre" id="r-genre"></p>
       <p class="result-score"><span id="r-score">0</span><small> / <span id="r-total">10</span></small></p>
       <p class="result-time" id="r-time"></p>
@@ -88,44 +91,44 @@
         <p class="bubble" id="r-msg"></p>
       </div>
       <div class="share">
-        <p class="share-title">結果をシェアする</p>
+        <p class="share-title" data-i18n="shareTitle">結果をシェアする</p>
         <p class="share-marks" id="share-marks"></p>
         <div class="share-buttons">
-          <a class="share-btn x" id="share-x" href="#" target="_blank" rel="noopener">𝕏 ポスト</a>
+          <a class="share-btn x" id="share-x" href="#" target="_blank" rel="noopener" data-i18n="sharePost">𝕏 ポスト</a>
           <a class="share-btn line" id="share-line" href="#" target="_blank" rel="noopener">LINE</a>
           <a class="share-btn fb" id="share-fb" href="#" target="_blank" rel="noopener">Facebook</a>
-          <button type="button" class="share-btn more" id="share-native" hidden>📤 その他</button>
-          <button type="button" class="share-btn copy" id="share-copy">🔗 コピー</button>
+          <button type="button" class="share-btn more" id="share-native" hidden data-i18n="shareMore">📤 その他</button>
+          <button type="button" class="share-btn copy" id="share-copy" data-i18n="shareCopy">🔗 コピー</button>
         </div>
         <p class="share-toast" id="share-toast" role="status"></p>
       </div>
       <div class="review" id="review"></div>
       <div class="menu">
-        <button class="btn primary big" id="btn-retry">もう一回！</button>
-        <button class="btn" id="btn-result-ranking">🏆 ランキング</button>
-        <button class="btn" id="btn-home">のれんへ戻る</button>
+        <button class="btn primary big" id="btn-retry" data-i18n="retry">もう一回！</button>
+        <button class="btn" id="btn-result-ranking" data-i18n="rankingBtn">🏆 ランキング</button>
+        <button class="btn" id="btn-home" data-i18n="home">のれんへ戻る</button>
       </div>
     </section>
 
     <!-- ランキング -->
     <section id="screen-ranking" class="screen">
-      <h2 class="zukan-title">🏆 ランキング</h2>
-      <p class="ranking-note">この端末での記録です（ジャンルごとに上位10件）</p>
-      <div class="genres" id="ranking-tabs" role="tablist" aria-label="ジャンル"></div>
+      <h2 class="zukan-title" data-i18n="rankingTitle">🏆 ランキング</h2>
+      <p class="ranking-note" data-i18n="rankingNote">この端末での記録です（ジャンルごとに上位10件）</p>
+      <div class="genres" id="ranking-tabs" role="tablist" aria-label="ジャンル" data-i18n-aria="genreAria"></div>
       <div class="ranking" id="ranking-list"></div>
       <div class="menu">
-        <button class="btn" id="btn-ranking-back">のれんへ戻る</button>
-        <button class="btn danger" id="btn-ranking-clear">記録を消す</button>
+        <button class="btn" id="btn-ranking-back" data-i18n="home">のれんへ戻る</button>
+        <button class="btn danger" id="btn-ranking-clear" data-i18n="clear">記録を消す</button>
       </div>
     </section>
 
     <!-- 図鑑 -->
     <section id="screen-zukan" class="screen">
-      <h2 class="zukan-title">📖 見分け図鑑 <small id="zukan-count"></small></h2>
-      <div class="genres" id="zukan-tabs" role="tablist" aria-label="ジャンル"></div>
+      <h2 class="zukan-title"><span data-i18n="zukanTitle">📖 見分け図鑑</span> <small id="zukan-count"></small></h2>
+      <div class="genres" id="zukan-tabs" role="tablist" aria-label="ジャンル" data-i18n-aria="genreAria"></div>
       <div class="zukan" id="zukan"></div>
       <div class="menu">
-        <button class="btn" id="btn-zukan-back">のれんへ戻る</button>
+        <button class="btn" id="btn-zukan-back" data-i18n="home">のれんへ戻る</button>
       </div>
     </section>
   </main>
@@ -134,6 +137,8 @@
 
   <script src="js/fish.js"></script>
   <script src="js/data.js"></script>
+  <script src="js/data-en.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/sound.js"></script>
   <script src="js/ranking.js"></script>
   <script src="js/game.js"></script>

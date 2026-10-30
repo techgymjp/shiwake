@@ -197,25 +197,28 @@ const Sound = (() => {
 
   // ---------- 大将の声（ブラウザの音声合成） ----------
   const synth = window.speechSynthesis;
-  let jaVoice = null;
+  const chosen = { ja: null, en: null };
   function pickVoice() {
     if (!synth) return;
-    const voices = synth.getVoices().filter((v) => /^ja/i.test(v.lang));
+    const all = synth.getVoices();
     // 男性っぽい声があれば優先
-    jaVoice = voices.find((v) => /otoya|ichiro|keita|male|男性/i.test(v.name)) || voices[0] || null;
+    const ja = all.filter((v) => /^ja/i.test(v.lang));
+    chosen.ja = ja.find((v) => /otoya|ichiro|keita|male|男性/i.test(v.name)) || ja[0] || null;
+    const en = all.filter((v) => /^en/i.test(v.lang));
+    chosen.en = en.find((v) => /daniel|alex|fred|david|male/i.test(v.name)) || en.find((v) => /^en-US/i.test(v.lang)) || en[0] || null;
   }
   if (synth) {
     pickVoice();
     synth.addEventListener?.('voiceschanged', pickVoice);
   }
 
-  function say(text) {
+  function say(text, lang = 'ja') {
     if (!settings.voice || !synth) return;
     synth.cancel();
     const u = new SpeechSynthesisUtterance(text.replace(/[「」…]/g, ''));
-    u.lang = 'ja-JP';
-    if (jaVoice) u.voice = jaVoice;
-    u.rate = 1.15;
+    u.lang = lang === 'en' ? 'en-US' : 'ja-JP';
+    if (chosen[lang]) u.voice = chosen[lang];
+    u.rate = lang === 'en' ? 1.05 : 1.15;
     u.pitch = 0.75;
     u.volume = 1;
     synth.speak(u);

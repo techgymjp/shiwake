@@ -22,22 +22,11 @@
     return a;
   }
 
-  // ---------- 大将のセリフ（{n} に魚の名前が入る） ----------
-  const ORDERS = [
-    'へいっ！{n}を一丁たのむ！',
-    'おう、{n}を持ってきてくんな！',
-    'お客さんから{n}の注文だ！どっちだ？',
-    '次は{n}だ。目利きの見せどころだぞ！',
-    '{n}、急ぎで頼むよ！',
-    'いい{n}が入ってる。取ってきてくれ！',
-  ];
-  const PRAISES = ['いい目してるねぇ！', 'お見事！それが{n}だ！', 'よっ、目利き！', 'さすがだ、わかってるねぇ！', 'そうそう、それだよ！'];
-  const COMBO_PRAISES = ['{c}連続！こいつぁ大したもんだ！', '{c}連続正解！板前の素質ありだな！'];
-  const SCOLDS = ['おいおい、そいつは{w}だ！', 'ちがうちがう、それは{w}だよ！', 'あちゃー、それは{w}だ。よく見な！'];
-
-  const LEVEL_UP = { 2: 'ここから少し難しくなるぞ。', 3: 'さあ、ここからは上級編だ！' };
-
-  const fill = (tpl, vars) => tpl.replace(/\{(\w)\}/g, (_, k) => vars[k]);
+  // 文言・大将のセリフは js/i18n.js にまとめている
+  const { t, fill } = I18N;
+  const nameOf = (fish) => I18N.fishName(fish);
+  const fmtTime = (ms) => Ranking.formatTime(ms, I18N.lang);
+  const say = (text) => Sound.say(text, I18N.lang);
 
   // ---------- 大将のイラスト ----------
   function chefSvg(mood = 'normal') {
@@ -53,7 +42,7 @@
       ? '<path d="M 39 47 L 53 51 M 81 47 L 67 51" stroke="#233050" stroke-width="5" stroke-linecap="round"/>'
       : '<path d="M 39 50 L 53 46 M 81 50 L 67 46" stroke="#233050" stroke-width="5" stroke-linecap="round"/>';
     const sweat = mood === 'sad' ? '<path d="M 88 52 Q 84 60 88 63 Q 92 60 88 52 Z" fill="#7fd3ff" stroke="#233050" stroke-width="1.5"/>' : '';
-    return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="寿司屋の大将">
+    return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${t('chefLabel')}">
       <path d="M 10 124 Q 14 94 60 92 Q 106 94 110 124 Z" fill="#fff" stroke="#233050" stroke-width="3"/>
       <path d="M 46 93 L 60 112 L 74 93" fill="#2f6fd6" stroke="#233050" stroke-width="3" stroke-linejoin="round"/>
       <circle cx="28" cy="62" r="7" fill="#ffd3a6" stroke="#233050" stroke-width="2.5"/>
@@ -141,7 +130,7 @@
       btn.className = 'genre';
       btn.setAttribute('role', 'radio');
       btn.setAttribute('aria-checked', String(g.id === state.genre));
-      btn.innerHTML = `<span class="icon">${g.icon}</span>${g.label}<small>${poolOf(g.id).length}組</small>`;
+      btn.innerHTML = `<span class="icon">${g.icon}</span>${I18N.genreLabel(g)}<small>${t('pairs', { n: poolOf(g.id).length })}</small>`;
       btn.addEventListener('click', () => {
         state.genre = g.id;
         try { localStorage.setItem(GENRE_KEY, g.id); } catch { /* 保存できなくても遊べる */ }
@@ -151,12 +140,13 @@
       box.appendChild(btn);
     });
     const n = countOf(state.genre);
-    $('btn-start').textContent = `板場に立つ！（${n}問）`;
+    $('btn-start').textContent = t('start', { n });
     const top = Ranking.list(state.genre)[0];
     const best = loadBest(state.genre);
+    const g = I18N.genreLabel(genreOf(state.genre));
     $('best-score').textContent = top
-      ? `🏆 ${genreOf(state.genre).label}の1位：${top.score} / ${top.total}（${Ranking.formatTime(top.time)}）`
-      : best ? `🏆 ${genreOf(state.genre).label}のベスト：${best} / ${n}` : '';
+      ? t('bestTop', { g, s: top.score, t: top.total, time: fmtTime(top.time) })
+      : best ? t('bestScore', { g, s: best, t: n }) : '';
   }
 
   // 出題する組を選ぶ：難易度がまんべんなく混ざるように選び、やさしい順に並べる
@@ -194,14 +184,14 @@
 
   function updateStatus() {
     $('q-count').textContent = `${state.index + 1} / ${state.list.length}`;
-    $('q-score').textContent = `正解 ${state.score}`;
-    const level = LEVELS[state.list[state.index].pair.level];
-    $('q-level').textContent = level.stars;
-    $('q-level').title = level.label;
+    $('q-score').textContent = t('correct', { n: state.score });
+    const lv = state.list[state.index].pair.level;
+    $('q-level').textContent = LEVELS[lv].stars;
+    $('q-level').title = I18N.levelLabel(lv);
     $('q-level').dataset.level = state.list[state.index].pair.level;
     const combo = $('q-combo');
     combo.hidden = state.combo < 2;
-    combo.textContent = `🔥 ${state.combo}連続`;
+    combo.textContent = t('combo', { n: state.combo });
   }
 
   function renderQuestion() {
@@ -213,11 +203,11 @@
 
     // 難易度が上がったところで大将がひとこと
     const prev = state.list[state.index - 1];
-    const intro = prev && prev.pair.level < q.pair.level ? LEVEL_UP[q.pair.level] : '';
-    const order = intro + pick(ORDERS);
-    $('question').innerHTML = fill(order, { n: `<span class="target">${target.name}</span>` });
+    const intro = prev && prev.pair.level < q.pair.level ? t('levelUp')[q.pair.level] : '';
+    const order = intro + pick(t('orders'));
+    $('question').innerHTML = fill(order, { n: `<span class="target">${nameOf(target)}</span>` });
     setChef('quiz-chef', 'normal');
-    Sound.say(fill(order, { n: target.name }));
+    say(fill(order, { n: nameOf(target) }));
 
     const box = $('choices');
     box.innerHTML = '';
@@ -225,8 +215,8 @@
       const btn = document.createElement('button');
       btn.className = 'card';
       btn.type = 'button';
-      btn.setAttribute('aria-label', `${i === 0 ? '左' : '右'}の魚`);
-      btn.innerHTML = `<div class="art">${FishArt.render(opt.art)}</div><div class="name">${opt.name}</div><div class="mark"></div>`;
+      btn.setAttribute('aria-label', t(i === 0 ? 'leftFish' : 'rightFish'));
+      btn.innerHTML = `<div class="art">${FishArt.render(opt.art)}</div><div class="name">${nameOf(opt)}</div><div class="mark"></div>`;
       btn.addEventListener('click', () => answer(i));
       box.appendChild(btn);
     });
@@ -257,25 +247,25 @@
       state.marks.push(true);
       Sound.play('correct', state.combo);
       confetti(cards[i], state.combo >= 3 ? 40 : 24);
-      line = fill(state.combo >= 3 ? pick(COMBO_PRAISES) : pick(PRAISES), { n: q.options[q.answer].name, c: state.combo });
+      line = fill(pick(t(state.combo >= 3 ? 'comboPraises' : 'praises')), { n: nameOf(q.options[q.answer]), c: state.combo });
     } else {
       state.combo = 0;
       state.misses.push(q.pair);
       state.marks.push(false);
       Sound.play('wrong');
-      line = fill(pick(SCOLDS), { w: q.options[i].name });
+      line = fill(pick(t('scolds')), { w: nameOf(q.options[i]) });
     }
     updateStatus();
     $('progress-bar').style.width = `${((state.index + 1) / state.list.length) * 100}%`;
     setChef('quiz-chef', ok ? 'happy' : 'sad');
     $('question').textContent = line;
-    Sound.say(line);
+    say(line);
 
     const verdict = $('verdict');
-    verdict.textContent = ok ? 'せいかい！' : 'ざんねん…';
+    verdict.textContent = t(ok ? 'verdictOk' : 'verdictNg');
     verdict.className = `verdict ${ok ? 'ok' : 'ng'}`;
-    $('point').innerHTML = `<span class="label">見分けポイント</span>${q.pair.point}`;
-    $('btn-next').textContent = state.index + 1 < state.list.length ? '次の注文へ ▶' : '結果を見る ▶';
+    $('point').innerHTML = `<span class="label">${t('pointLabel')}</span>${I18N.pointOf(q.pair)}`;
+    $('btn-next').textContent = t(state.index + 1 < state.list.length ? 'nextOrder' : 'seeResult');
     $('feedback').hidden = false;
     $('btn-next').focus({ preventScroll: true });
     $('feedback').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -289,52 +279,65 @@
   }
 
   // ---------- 結果 ----------
+  // 称号と大将のひとことは i18n の ranks（同じ並び）から取る
   const RANKS = [
-    { min: 10, title: '👑 大将も認める目利き', msg: '全問正解！明日から板場に立ってくれ！', mood: 'happy' },
-    { min: 8, title: '🍣 一人前の板前', msg: 'いい腕だ！あと少しで店を任せられるな。', mood: 'happy' },
-    { min: 5, title: '🔪 見習い板前', msg: 'まずまずだ。見分け図鑑で修行しな！', mood: 'normal' },
-    { min: 0, title: '🫧 皿洗いから修行', msg: 'まだまだだな…図鑑でみっちり修行だ！', mood: 'sad' },
+    { min: 10, mood: 'happy' },
+    { min: 8, mood: 'happy' },
+    { min: 5, mood: 'normal' },
+    { min: 0, mood: 'sad' },
   ];
+  const rankText = (idx) => t('ranks')[idx];
 
   function finish() {
     const total = state.list.length;
     const score = state.score;
-    const rank = RANKS.find((r) => score >= Math.round((r.min / 10) * total));
-    $('r-score').textContent = score;
-    $('r-total').textContent = total;
-    $('r-rank').textContent = rank.title;
-    $('r-msg').textContent = rank.msg;
-    $('r-genre').textContent = `${genreOf(state.genre).icon} ${genreOf(state.genre).label}`;
+    const rankIdx = RANKS.findIndex((r) => score >= Math.round((r.min / 10) * total));
+    const rank = { ...RANKS[rankIdx], ...rankText(rankIdx) };
+    state.lastResult = { rankIdx, total, score };
     if (score > loadBest(state.genre)) saveBest(state.genre, score);
-    $('r-time').textContent = `⏱ タイム ${Ranking.formatTime(state.time)}`;
-    const name = Ranking.getName() || Ranking.DEFAULT_NAME;
-    const rec = Ranking.add(state.genre, { name, score, total, time: Math.round(state.time), title: rank.title });
+    const name = Ranking.getName() || t('defaultName');
+    const rec = Ranking.add(state.genre, { name, score, total, time: Math.round(state.time), title: rank.title, rankIdx });
     state.lastRecord = rec.id;
-    const rankIn = $('r-rankin');
-    rankIn.hidden = !rec.rank;
-    rankIn.textContent = rec.rank === 1 ? '🎉 ランキング 1位 更新！' : `ランキング ${rec.rank}位 にランクイン！`;
-    setupShare(rank);
+    state.lastResult.rankPos = rec.rank;
+    renderResultText();
 
-    $('review').innerHTML = state.misses.length
-      ? `<h3>まちがえた魚をおさらい</h3>${state.misses.map(pairCard).join('')}`
-      : '';
     show('result');
     setChef('result-chef', rank.mood);
 
     const good = score >= Math.round(total / 2);
     Sound.duck(2.2);
     Sound.play('fanfare', good);
-    setTimeout(() => Sound.say(rank.msg), 1600);
+    setTimeout(() => say(rank.msg), 1600);
     if (good) {
       confetti(null, score === total ? 80 : 40);
       if (score === total) setTimeout(() => confetti(null, 80), 500);
     }
   }
 
+  // 結果画面の文言（言語を切り替えたときも呼ぶ）
+  function renderResultText() {
+    const r = state.lastResult;
+    if (!r) return;
+    const rank = rankText(r.rankIdx);
+    const genre = genreOf(state.genre);
+    $('r-score').textContent = r.score;
+    $('r-total').textContent = r.total;
+    $('r-rank').textContent = rank.title;
+    $('r-msg').textContent = rank.msg;
+    $('r-genre').textContent = `${genre.icon} ${I18N.genreLabel(genre)}`;
+    $('r-time').textContent = t('time', { t: fmtTime(state.time) });
+    const rankIn = $('r-rankin');
+    rankIn.hidden = !r.rankPos;
+    rankIn.textContent = r.rankPos === 1 ? t('rankInTop') : t('rankIn', { n: r.rankPos });
+    $('review').innerHTML = state.misses.length
+      ? `<h3>${t('reviewTitle')}</h3>${state.misses.map(pairCard).join('')}`
+      : '';
+    setupShare(rank);
+  }
+
   // ---------- SNS シェア ----------
   // シェアするリンク先（ゲームの紹介記事）
   const SHARE_URL = 'https://techgym.jp/column/claude-code-game-shiwake/';
-  const HASHTAG = '魚仕分け';
   let shareText = '';
 
   function shareUrl() {
@@ -345,10 +348,10 @@
     const genre = genreOf(state.genre);
     const marks = state.marks.map((ok) => (ok ? '⭕' : '❌')).join('');
     $('share-marks').textContent = marks;
-    shareText = `魚仕分け【${genre.label}】で ${state.score}/${state.list.length}問正解！（${Ranking.formatTime(state.time)}）\n称号：${rank.title}\n${marks}`;
+    shareText = t('shareText', { g: I18N.genreLabel(genre), s: state.score, t: state.list.length, time: fmtTime(state.time), title: rank.title, marks });
     const url = shareUrl();
     const enc = encodeURIComponent;
-    $('share-x').href = `https://twitter.com/intent/tweet?text=${enc(shareText)}&url=${enc(url)}&hashtags=${enc(HASHTAG)}`;
+    $('share-x').href = `https://twitter.com/intent/tweet?text=${enc(shareText)}&url=${enc(url)}&hashtags=${enc(t('hashtag'))}`;
     $('share-line').href = `https://line.me/R/msg/text/?${enc(`${shareText}\n${url}`)}`;
     $('share-fb').href = `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`;
     $('share-native').hidden = !navigator.share;
@@ -363,7 +366,7 @@
   }
 
   async function copyShare() {
-    const text = `${shareText}\n${shareUrl()} #${HASHTAG}`;
+    const text = `${shareText}\n${shareUrl()} #${t('hashtag')}`;
     try {
       await navigator.clipboard.writeText(text);
     } catch {
@@ -375,12 +378,12 @@
       document.execCommand('copy');
       ta.remove();
     }
-    toast('コピーしました！');
+    toast(t('copied'));
   }
 
   async function nativeShare() {
     try {
-      await navigator.share({ title: '魚仕分け', text: `${shareText}\n#${HASHTAG}`, url: shareUrl() });
+      await navigator.share({ title: t('htmlTitle'), text: `${shareText}\n#${t('hashtag')}`, url: shareUrl() });
     } catch { /* キャンセルされたときは何もしない */ }
   }
 
@@ -403,7 +406,7 @@
       btn.setAttribute('role', 'tab');
       btn.setAttribute('aria-checked', String(g.id === genre));
       btn.setAttribute('aria-selected', String(g.id === genre));
-      btn.innerHTML = `<span class="icon">${g.icon}</span>${g.label}`;
+      btn.innerHTML = `<span class="icon">${g.icon}</span>${I18N.genreLabel(g)}`;
       btn.addEventListener('click', () => { Sound.play('tap'); renderRanking(g.id); });
       tabs.appendChild(btn);
     });
@@ -413,11 +416,11 @@
       ? `<ol>${rows.map((r, i) => `
           <li class="${r.id === state.lastRecord ? 'latest' : ''}">
             <span class="pos">${MEDALS[i] || `${i + 1}`}</span>
-            <span class="who">${escapeHtml(r.name)}<small>${escapeHtml(r.title)}</small></span>
+            <span class="who">${escapeHtml(r.name)}<small>${escapeHtml(r.rankIdx != null ? rankText(r.rankIdx).title : r.title)}</small></span>
             <span class="pts">${r.score}<small>/${r.total}</small></span>
-            <span class="time">${Ranking.formatTime(r.time)}<small>${Ranking.formatDate(r.date)}</small></span>
+            <span class="time">${fmtTime(r.time)}<small>${Ranking.formatDate(r.date)}</small></span>
           </li>`).join('')}</ol>`
-      : '<p class="empty">まだ記録がないよ。板場に立ってみよう！</p>';
+      : `<p class="empty">${t('empty')}</p>`;
     $('btn-ranking-clear').hidden = !rows.length;
   }
 
@@ -430,15 +433,16 @@
   function pairCard(pair) {
     return `<article class="pair">
       <div class="pair-fish">
-        <figure>${FishArt.render(pair.a.art)}<figcaption>${pair.a.name}</figcaption></figure>
-        <figure>${FishArt.render(pair.b.art)}<figcaption>${pair.b.name}</figcaption></figure>
+        <figure>${FishArt.render(pair.a.art)}<figcaption>${nameOf(pair.a)}</figcaption></figure>
+        <figure>${FishArt.render(pair.b.art)}<figcaption>${nameOf(pair.b)}</figcaption></figure>
       </div>
-      <p class="point"><span class="lv" data-level="${pair.level}">${LEVELS[pair.level].stars}</span>${pair.point}</p>
+      <p class="point"><span class="lv" data-level="${pair.level}" title="${I18N.levelLabel(pair.level)}">${LEVELS[pair.level].stars}</span>${I18N.pointOf(pair)}</p>
     </article>`;
   }
 
   // ---------- 図鑑 ----------
-  function renderZukan(genre = 'all') {
+  function renderZukan(genre = state.zukanGenre || 'all') {
+    state.zukanGenre = genre;
     const tabs = $('zukan-tabs');
     tabs.innerHTML = '';
     GENRES.forEach((g) => {
@@ -448,19 +452,19 @@
       btn.setAttribute('role', 'tab');
       btn.setAttribute('aria-checked', String(g.id === genre));
       btn.setAttribute('aria-selected', String(g.id === genre));
-      btn.innerHTML = `<span class="icon">${g.icon}</span>${g.label}<small>${poolOf(g.id).length}組</small>`;
+      btn.innerHTML = `<span class="icon">${g.icon}</span>${I18N.genreLabel(g)}<small>${t('pairs', { n: poolOf(g.id).length })}</small>`;
       btn.addEventListener('click', () => { Sound.play('tap'); renderZukan(g.id); });
       tabs.appendChild(btn);
     });
     // やさしい順に並べる
     const pairs = poolOf(genre).slice().sort((a, b) => a.level - b.level);
     $('zukan').innerHTML = pairs.map(pairCard).join('');
-    $('zukan-count').textContent = `全${FISH_PAIRS.length}組`;
+    $('zukan-count').textContent = t('zukanCount', { n: FISH_PAIRS.length });
   }
 
   function showZukan() {
     Sound.play('tap');
-    renderZukan();
+    renderZukan('all');
     show('zukan');
   }
 
@@ -490,7 +494,7 @@
   $('btn-ranking-back').addEventListener('click', () => { Sound.play('tap'); renderTitle(); });
   $('btn-ranking-clear').addEventListener('click', () => {
     const g = genreOf(state.rankingGenre);
-    if (!confirm(`「${g.label}」のランキングを消しますか？`)) return;
+    if (!confirm(t('clearConfirm', { g: I18N.genreLabel(g) }))) return;
     Ranking.clear(state.rankingGenre);
     renderRanking();
   });
@@ -504,5 +508,36 @@
     else if (!state.answered && (e.key === 'ArrowRight' || e.key === '2')) answer(1);
   });
 
+  // ---------- 言語の切り替え ----------
+  $('tg-lang').addEventListener('click', () => {
+    Sound.play('tap');
+    I18N.setLang(I18N.lang === 'ja' ? 'en' : 'ja');
+  });
+  // 表示中の画面を、選んだ言語で描き直す
+  I18N.onChange(() => {
+    const active = document.querySelector('.screen.active').id.replace('screen-', '');
+    if (active === 'title') renderGenres();
+    if (active === 'ranking') renderRanking();
+    if (active === 'zukan') renderZukan();
+    if (active === 'result') renderResultText();
+    if (active === 'quiz') {
+      const q = state.list[state.index];
+      updateStatus();
+      if (!state.answered) {
+        $('question').innerHTML = fill(t('orders')[0], { n: `<span class="target">${nameOf(q.options[q.answer])}</span>` });
+      } else {
+        $('verdict').textContent = t($('verdict').classList.contains('ok') ? 'verdictOk' : 'verdictNg');
+        $('point').innerHTML = `<span class="label">${t('pointLabel')}</span>${I18N.pointOf(q.pair)}`;
+        $('btn-next').textContent = t(state.index + 1 < state.list.length ? 'nextOrder' : 'seeResult');
+      }
+      [...$('choices').children].forEach((c, i) => {
+        c.querySelector('.name').textContent = nameOf(q.options[i]);
+        c.setAttribute('aria-label', t(i === 0 ? 'leftFish' : 'rightFish'));
+      });
+    }
+    $('title-chef').innerHTML = chefSvg('happy');
+  });
+
+  I18N.apply();
   renderTitle();
 })();
