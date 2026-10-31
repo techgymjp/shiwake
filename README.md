@@ -42,6 +42,10 @@
 - `js/ranking.js` … ランキングの保存と並べ替え
 - `js/i18n.js` … 画面の文言と大将のセリフ（日本語・英語）、言語の切り替え
 - `js/data-en.js` … 魚の英語名と見分けポイントの英訳
+- `js/ads.js` … 広告（Android アプリのときだけ動く）
+- `js/ads-config.js`・`js/build-info.js` … 広告のモードとバージョン表示（アプリのビルド時に生成し直す）
+- `android/` … Android アプリのプロジェクト（Capacitor）
+- `assets/` … アプリのアイコンと起動画面の元画像
 - `js/game.js` … ゲーム進行・大将のセリフ
 
 ## 問題の追加方法
@@ -53,3 +57,48 @@
 
 `.github/workflows/pages.yml` が push のたびにサイトをデプロイします。
 初回のみ、リポジトリの **Settings → Pages → Build and deployment → Source** を **GitHub Actions** に設定してください。
+
+## Android アプリ
+
+[Capacitor](https://capacitorjs.com/) でゲームのファイルをアプリに同梱し、Android アプリにしています（オフラインで遊べます。フォントだけは通信できるときに Google Fonts から読み込み、できないときは端末の丸ゴシックで表示します）。
+構成は techgymjp/jet-fighter の `docs/ANDROID_PORTING.md`、techgymjp/jackal と同じです。
+
+- パッケージ名: `jp.techgym.shiwake`
+- アプリ名: ホーム画面で「魚仕分け」（英語の端末では Fish Shiwake）
+- 縦画面固定・全画面・プレイ中は画面を消さない
+- 戻るボタン: プレイ中は一時停止（一時停止中なら再開）、タイトル・結果画面ではアプリを終了、図鑑・ランキングではタイトルへ
+- 別アプリに切り替えると自動で一時停止して音を止める（止めている間はタイムに数えない）。問題画面の左上の「❚❚」でも一時停止できる
+- シェアは Android の共有メニュー（X・LINE・Facebook のボタンは Web 版だけ）
+- 大将の声（音声読み上げ）は Android の WebView では使えないため、アプリでは「声」ボタンを出さない
+- 広告（AdMob）
+  - バナー: 問題に答えている間以外の画面（タイトル・図鑑・ランキング・一時停止・結果）の下中央
+  - 全画面広告（インタースティシャル）: 「板場に立つ！」（プレイ開始）、結果画面の「もう一回！」、「のれんへ戻る」（結果・一時停止・図鑑・ランキングから）、一時停止からの「再開する」のたびに毎回
+  - リワード広告（チート）: 問題をまちがえたら「広告を見てやり直す」（1 ゲーム 3 回まで。解説を読めるよう 2.5 秒後に出し、8 秒で自動的に消える）。
+    見終わると、その問題の成績（不正解・タイム・連続正解の途切れ）を取り消して、同じジャンル・同じ難易度の**別の問題**でやり直す（2 択の同じ問題では答えがわかってしまうため）。
+    使ったことは結果画面・ランキング・シェア文に「やり直し N 回」と出る
+  - EU など同意が必要な地域ではタイトル画面に「広告の設定」
+- タイトル画面の下にバージョン（ビルド番号）とプライバシーポリシーへのリンク
+
+ビルドは GitHub Actions（`.github/workflows/android.yml`）で行います。
+
+1. `npm ci` → `npm run build`（`www/` に Web ファイルをコピーし、`js/ads-config.js` と `js/build-info.js` を生成）→ `npx cap sync android` → `./gradlew assembleDebug`
+2. 既定ブランチなら、Release `android-latest` の `shiwake.apk` を差し替え（動作確認用・テスト広告）
+   - リリース画面: https://github.com/techgymjp/shiwake/releases/tag/android-latest
+   - APK 直接: https://github.com/techgymjp/shiwake/releases/latest/download/shiwake.apk
+   - QR コード（リリース画面）: `docs/apk-qr.png`
+
+     ![Android 版のリリース画面の QR コード](docs/apk-qr.png)
+3. GitHub Secrets に署名鍵（`ANDROID_KEYSTORE_BASE64` / `ANDROID_KEYSTORE_PASSWORD` / `ANDROID_KEY_ALIAS` / `ANDROID_KEY_PASSWORD`）があれば、本番広告で署名付き AAB を作り Artifact に上げる
+
+AdMob のアプリ ID は `android/app/src/main/res/values/strings.xml` の `admob_app_id`（届くまでは Google 公式のテスト用アプリ ID）、本番の広告ユニット ID は `js/ads.js` の `UNITS.android.production` にあります。
+動作確認用 APK はどれもテスト広告、Google Play 用の AAB は本番の広告です（広告ユニット ID が空の種類は出さない）。
+
+手元で試すとき: `npm install` → `npm run android:sync` → `npm run android:open`（Android Studio が必要）。
+アイコンと起動画面は `assets/` の元画像から `npx @capacitor/assets generate --android` で生成しています。
+
+## ライセンス
+
+著作権はテックジム株式会社に帰属します（All rights reserved）。許可なく複製・改変・再配布すること、Web サイトやアプリとして公開・販売すること、名前・ロゴ・アイコン・画像を使うことを禁止します。
+テックジムの受講生が学習目的で複製・改変することは許可しますが、アプリストアでの公開・広告の掲載・販売などの商用利用は禁止し、著作権表示を残してください。
+詳しくは [LICENSE](LICENSE) を見てください。
+

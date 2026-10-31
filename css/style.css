@@ -669,3 +669,49 @@ body {
 .logo-sub:empty { display: none; }
 html[lang="en"] .bubble { line-height: 1.45; }
 html[lang="en"] .card .name { font-size: 1rem; line-height: 1.25; }
+
+/* ---------- アプリ版：一時停止・リワード・バナー・タイトル下の表示 ---------- */
+.pause-btn { cursor: pointer; font: inherit; font-weight: 900; color: var(--ink); }
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  background: rgba(35, 48, 80, .55);
+}
+.overlay[hidden] { display: none; }
+.pause-box {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 260px;
+  padding: 24px 28px;
+  text-align: center;
+  background: var(--paper);
+  border: 4px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  animation: pop-in .3s cubic-bezier(.2, 1.6, .5, 1);
+}
+.pause-title { margin: 0 0 4px; font-size: 1.6rem; font-weight: 900; }
+
+.redo {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  background: #fff6cc;
+  border: 3px dashed var(--ink);
+  border-radius: 16px;
+  animation: pop-in .3s cubic-bezier(.2, 1.6, .5, 1);
+}
+.redo-note { margin: 0 0 10px; font-weight: 800; }
+.redo-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.redo-buttons .btn { font-size: .95rem; padding: 9px 16px; }
+.result-redo { margin: -4px 0 8px; font-weight: 800; color: var(--muted); }
+
+/* バナー広告（画面の下）と重ならないようにする */
+body.has-banner #app { padding-bottom: 80px; }
+
+.legal { margin: 18px 0 0; font-size: .8rem; font-weight: 800; color: var(--muted); }
+.legal a { color: var(--ink); }
+.share-btn[hidden] { display: none; }

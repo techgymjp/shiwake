@@ -230,8 +230,19 @@ const Sound = (() => {
     if (!on && synth) synth.cancel();
   }
 
+  // アプリを裏に回したときや広告の表示中は音を止める
+  function suspend() {
+    if (ctx && ctx.state === 'running') ctx.suspend();
+    if (synth) synth.cancel();
+  }
+  function resume() {
+    if (ctx && ctx.state === 'suspended') ctx.resume();
+  }
+
   return {
-    play, startBgm, stopBgm, duck, setBgm, setSe, say, setVoice,
+    play, startBgm, stopBgm, duck, setBgm, setSe, say, setVoice, suspend, resume,
+    // 音声読み上げが使えるか（Android アプリの WebView では使えない）
+    get hasVoice() { return !!synth; },
     get voice() { return settings.voice; },
     get bgm() { return settings.bgm; },
     get se() { return settings.se; },

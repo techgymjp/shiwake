@@ -1,0 +1,11 @@
+{
+  "appId": "jp.techgym.shiwake",
+  "appName": "魚仕分け",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#8fe2f3"
+  },
+  "ios": {
+    "backgroundColor": "#8fe2f3"
+  }
+}

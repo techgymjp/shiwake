@@ -53,12 +53,18 @@
         <button class="btn" id="btn-zukan" data-i18n="zukanBtn">📖 見分け図鑑</button>
       </div>
       <p class="best" id="best-score"></p>
+      <p class="legal" id="legal">
+        <span id="build-info"></span>
+        <a href="https://techgym.jp/privacy-policy/" id="privacy-link" target="_blank" rel="noopener" data-i18n="privacy">プライバシーポリシー</a>
+        <span id="ad-privacy" hidden>| <a href="#" id="ad-privacy-link" data-i18n="adSettings">広告の設定</a></span>
+      </p>
     </section>
 
     <!-- 問題 -->
     <section id="screen-quiz" class="screen">
       <header class="quiz-head">
         <div class="status">
+          <button type="button" class="chip pause-btn" id="btn-pause" data-i18n-aria="pauseTitle" aria-label="一時停止">❚❚</button>
           <span class="chip" id="q-count">1 / 10</span>
           <span class="chip level" id="q-level"></span>
           <span class="chip score" id="q-score">正解 0</span>
@@ -74,6 +80,13 @@
       <div class="feedback" id="feedback" hidden>
         <p class="verdict" id="verdict"></p>
         <p class="point" id="point"></p>
+        <div class="redo" id="redo" hidden>
+          <p class="redo-note" id="redo-note"></p>
+          <div class="redo-buttons">
+            <button type="button" class="btn primary" id="redo-watch"></button>
+            <button type="button" class="btn" id="redo-skip"></button>
+          </div>
+        </div>
         <button class="btn primary" id="btn-next">次へ</button>
       </div>
     </section>
@@ -84,6 +97,7 @@
       <p class="result-genre" id="r-genre"></p>
       <p class="result-score"><span id="r-score">0</span><small> / <span id="r-total">10</span></small></p>
       <p class="result-time" id="r-time"></p>
+      <p class="result-redo" id="r-redo" hidden></p>
       <p class="rank" id="r-rank"></p>
       <p class="rank-in" id="r-rankin" hidden></p>
       <div class="chef-row">
@@ -133,6 +147,15 @@
     </section>
   </main>
 
+  <!-- 一時停止（戻るボタン・アプリの切り替え・⏸ボタン） -->
+  <div class="overlay" id="pause" hidden>
+    <div class="pause-box">
+      <p class="pause-title" data-i18n="pauseTitle">ひと休み</p>
+      <button type="button" class="btn primary big" id="btn-resume" data-i18n="resume">再開する</button>
+      <button type="button" class="btn" id="btn-pause-home" data-i18n="home">のれんへ戻る</button>
+    </div>
+  </div>
+
   <div class="confetti" id="confetti" aria-hidden="true"></div>
 
   <script src="js/fish.js"></script>
@@ -140,6 +163,9 @@
   <script src="js/data-en.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/sound.js"></script>
+  <script src="js/ads-config.js"></script>
+  <script src="js/build-info.js"></script>
+  <script src="js/ads.js"></script>
   <script src="js/ranking.js"></script>
   <script src="js/game.js"></script>
 </body>

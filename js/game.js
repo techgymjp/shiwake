@@ -10,7 +10,10 @@
   const LEVEL_MIX = { 1: 0.3, 2: 0.4, 3: 0.3 };
 
   const $ = (id) => document.getElementById(id);
-  const state = { list: [], index: 0, score: 0, combo: 0, answered: false, misses: [], marks: [], time: 0, shownAt: 0, lastRecord: null, rankingGenre: 'all', genre: loadGenre() };
+  // Android / iOS アプリ(Capacitor)で動いているか。Web 版では Capacitor がないので何もしない
+  const NATIVE = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+  const plugin = (name) => (NATIVE && window.Capacitor.Plugins ? window.Capacitor.Plugins[name] : null);
+  const state = { list: [], index: 0, score: 0, combo: 0, answered: false, misses: [], marks: [], time: 0, paused: false, redoUsed: 0, qTime: 0, prevCombo: 0, shownAt: 0, lastRecord: null, rankingGenre: 'all', genre: loadGenre() };
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
   function shuffle(arr) {
@@ -70,6 +73,7 @@
   function show(name) {
     document.querySelectorAll('.screen').forEach((s) => s.classList.toggle('active', s.id === `screen-${name}`));
     window.scrollTo(0, 0);
+    updateBanner();
   }
 
   // ベストスコアはジャンルごとに保存（「ぜんぶ」は以前のキーをそのまま使う）
@@ -178,6 +182,8 @@
     state.misses = [];
     state.marks = [];
     state.time = 0;
+    state.redoUsed = 0;
+    state.paused = false;
     show('quiz');
     renderQuestion();
   }
@@ -221,6 +227,7 @@
       box.appendChild(btn);
     });
     $('feedback').hidden = true;
+    closeRedo();
     state.shownAt = performance.now();
   }
 
@@ -228,7 +235,8 @@
     if (state.answered) return;
     state.answered = true;
     // タイムは「問題が出てから答えるまで」の合計（解説を読む時間は含めない）
-    state.time += performance.now() - state.shownAt;
+    state.qTime = performance.now() - state.shownAt;
+    state.time += state.qTime;
     const q = state.list[state.index];
     const ok = i === q.answer;
     const cards = [...$('choices').children];
@@ -249,11 +257,13 @@
       confetti(cards[i], state.combo >= 3 ? 40 : 24);
       line = fill(pick(t(state.combo >= 3 ? 'comboPraises' : 'praises')), { n: nameOf(q.options[q.answer]), c: state.combo });
     } else {
+      state.prevCombo = state.combo;
       state.combo = 0;
       state.misses.push(q.pair);
       state.marks.push(false);
       Sound.play('wrong');
       line = fill(pick(t('scolds')), { w: nameOf(q.options[i]) });
+      offerRedo();
     }
     updateStatus();
     $('progress-bar').style.width = `${((state.index + 1) / state.list.length) * 100}%`;
@@ -272,6 +282,8 @@
   }
 
   function next() {
+    if (state.paused) return;
+    closeRedo();
     Sound.play('next');
     state.index++;
     if (state.index < state.list.length) renderQuestion();
@@ -296,7 +308,7 @@
     state.lastResult = { rankIdx, total, score };
     if (score > loadBest(state.genre)) saveBest(state.genre, score);
     const name = Ranking.getName() || t('defaultName');
-    const rec = Ranking.add(state.genre, { name, score, total, time: Math.round(state.time), title: rank.title, rankIdx });
+    const rec = Ranking.add(state.genre, { name, score, total, time: Math.round(state.time), title: rank.title, rankIdx, redo: state.redoUsed });
     state.lastRecord = rec.id;
     state.lastResult.rankPos = rec.rank;
     renderResultText();
@@ -326,6 +338,8 @@
     $('r-msg').textContent = rank.msg;
     $('r-genre').textContent = `${genre.icon} ${I18N.genreLabel(genre)}`;
     $('r-time').textContent = t('time', { t: fmtTime(state.time) });
+    $('r-redo').hidden = !state.redoUsed;
+    $('r-redo').textContent = t('redoUsed', { n: state.redoUsed });
     const rankIn = $('r-rankin');
     rankIn.hidden = !r.rankPos;
     rankIn.textContent = r.rankPos === 1 ? t('rankInTop') : t('rankIn', { n: r.rankPos });
@@ -348,13 +362,17 @@
     const genre = genreOf(state.genre);
     const marks = state.marks.map((ok) => (ok ? '⭕' : '❌')).join('');
     $('share-marks').textContent = marks;
-    shareText = t('shareText', { g: I18N.genreLabel(genre), s: state.score, t: state.list.length, time: fmtTime(state.time), title: rank.title, marks });
+    const redoNote = state.redoUsed ? t('shareRedo', { n: state.redoUsed }) : '';
+    shareText = t('shareText', { g: I18N.genreLabel(genre), s: state.score, t: state.list.length, time: fmtTime(state.time) + redoNote, title: rank.title, marks });
     const url = shareUrl();
     const enc = encodeURIComponent;
     $('share-x').href = `https://twitter.com/intent/tweet?text=${enc(shareText)}&url=${enc(url)}&hashtags=${enc(t('hashtag'))}`;
     $('share-line').href = `https://line.me/R/msg/text/?${enc(`${shareText}\n${url}`)}`;
     $('share-fb').href = `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`;
-    $('share-native').hidden = !navigator.share;
+    // アプリでは Android の共有メニューを使う（X・LINE・Facebook のリンクは出さない）
+    $('share-native').hidden = !(NATIVE || navigator.share);
+    $('share-native').textContent = t(NATIVE ? 'shareApp' : 'shareMore');
+    ['share-x', 'share-line', 'share-fb'].forEach((id) => { $(id).hidden = NATIVE; });
     $('share-toast').textContent = '';
   }
 
@@ -382,6 +400,11 @@
   }
 
   async function nativeShare() {
+    const share = plugin('Share');
+    if (share) {
+      try { await share.share({ title: t('htmlTitle'), text: `${shareText}\n#${t('hashtag')}`, url: shareUrl(), dialogTitle: t('shareTitle') }); } catch { /* キャンセル */ }
+      return;
+    }
     try {
       await navigator.share({ title: t('htmlTitle'), text: `${shareText}\n#${t('hashtag')}`, url: shareUrl() });
     } catch { /* キャンセルされたときは何もしない */ }
@@ -416,7 +439,7 @@
       ? `<ol>${rows.map((r, i) => `
           <li class="${r.id === state.lastRecord ? 'latest' : ''}">
             <span class="pos">${MEDALS[i] || `${i + 1}`}</span>
-            <span class="who">${escapeHtml(r.name)}<small>${escapeHtml(r.rankIdx != null ? rankText(r.rankIdx).title : r.title)}</small></span>
+            <span class="who">${escapeHtml(r.name)}<small>${escapeHtml(r.rankIdx != null ? rankText(r.rankIdx).title : r.title)}${r.redo ? ` · ${t('redoUsed', { n: r.redo })}` : ''}</small></span>
             <span class="pts">${r.score}<small>/${r.total}</small></span>
             <span class="time">${fmtTime(r.time)}<small>${Ranking.formatDate(r.date)}</small></span>
           </li>`).join('')}</ol>`
@@ -484,14 +507,14 @@
   bindToggle('tg-voice', () => Sound.voice, (v) => Sound.setVoice(v));
 
   // ---------- イベント ----------
-  $('btn-start').addEventListener('click', start);
-  $('btn-retry').addEventListener('click', start);
+  $('btn-start').addEventListener('click', () => withInterstitial(start));
+  $('btn-retry').addEventListener('click', () => withInterstitial(start));
   $('btn-next').addEventListener('click', next);
-  $('btn-home').addEventListener('click', () => { Sound.play('tap'); renderTitle(); });
+  $('btn-home').addEventListener('click', () => { Sound.play('tap'); withInterstitial(renderTitle); });
   $('btn-zukan').addEventListener('click', showZukan);
   $('btn-ranking').addEventListener('click', () => showRanking(state.genre));
   $('btn-result-ranking').addEventListener('click', () => showRanking(state.genre));
-  $('btn-ranking-back').addEventListener('click', () => { Sound.play('tap'); renderTitle(); });
+  $('btn-ranking-back').addEventListener('click', () => { Sound.play('tap'); withInterstitial(renderTitle); });
   $('btn-ranking-clear').addEventListener('click', () => {
     const g = genreOf(state.rankingGenre);
     if (!confirm(t('clearConfirm', { g: I18N.genreLabel(g) }))) return;
@@ -501,9 +524,9 @@
   const nameInput = $('player-name');
   nameInput.value = Ranking.getName();
   nameInput.addEventListener('input', () => Ranking.setName(nameInput.value));
-  $('btn-zukan-back').addEventListener('click', () => { Sound.play('tap'); renderTitle(); });
+  $('btn-zukan-back').addEventListener('click', () => { Sound.play('tap'); withInterstitial(renderTitle); });
   document.addEventListener('keydown', (e) => {
-    if (!$('screen-quiz').classList.contains('active')) return;
+    if (!$('screen-quiz').classList.contains('active') || state.paused) return;
     if (!state.answered && (e.key === 'ArrowLeft' || e.key === '1')) answer(0);
     else if (!state.answered && (e.key === 'ArrowRight' || e.key === '2')) answer(1);
   });
@@ -536,8 +559,166 @@
       });
     }
     $('title-chef').innerHTML = chefSvg('happy');
+    if (!$('redo').hidden && !redo.busy) $('redo-note').textContent = t('redoNote', { n: REDO_MAX - state.redoUsed });
+    $('privacy-link').href = t('privacyUrl');
   });
 
+  // ======================================================
+  //  アプリ（Android）用：広告・一時停止・戻るボタン
+  // ======================================================
+
+  const activeScreen = () => document.querySelector('.screen.active').id.replace('screen-', '');
+
+  // ---------- 全画面広告 ----------
+  // 「プレイ開始」「もう一回」「タイトルへ戻る」「ポーズからの再開」のたびに出す（Web 版では何もしない）
+  let adBusy = false;
+  async function withInterstitial(next) {
+    if (adBusy) return;
+    if (Ads.available) {
+      adBusy = true;
+      $('pause').hidden = true;
+      await Ads.showInterstitial(3000);
+      adBusy = false;
+    }
+    next();
+  }
+
+  // ---------- バナー広告：プレイ中（問題に答えている間）以外の画面の下中央 ----------
+  function updateBanner() {
+    const want = activeScreen() !== 'quiz' || state.paused;
+    Ads.setBanner(want);
+    document.body.classList.toggle('has-banner', Ads.available && want);
+  }
+
+  // ---------- 一時停止 ----------
+  function pause() {
+    if (state.paused || activeScreen() !== 'quiz') return;
+    state.paused = true;
+    state.pausedAt = performance.now();
+    Sound.suspend();
+    $('pause').hidden = false;
+    updateBanner();
+  }
+  function resumePlay() {
+    if (!state.paused) return;
+    // 止めていた間はタイムに数えない
+    if (!state.answered) state.shownAt += performance.now() - state.pausedAt;
+    state.paused = false;
+    $('pause').hidden = true;
+    Sound.resume();
+    updateBanner();
+  }
+  $('btn-pause').addEventListener('click', () => { Sound.play('tap'); pause(); });
+  $('btn-resume').addEventListener('click', () => withInterstitial(resumePlay));
+  $('btn-pause-home').addEventListener('click', () => withInterstitial(() => {
+    state.paused = false;
+    $('pause').hidden = true;
+    Sound.resume();
+    closeRedo();
+    renderTitle();
+  }));
+
+  // 裏に回ったら一時停止して音を止める（広告の表示中は広告側が音を止めている）
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      pause();
+      Sound.suspend();
+    } else if (!Ads.showing && !state.paused) {
+      Sound.resume();
+    }
+  });
+
+  // Android の戻るボタン：プレイ中はポーズ（ポーズ中なら再開）、タイトル・結果画面ではアプリを閉じる、図鑑・ランキングはタイトルへ
+  if (plugin('App')) {
+    plugin('App').addListener('backButton', () => {
+      if (adBusy) return;
+      const screen = activeScreen();
+      if (screen === 'title' || screen === 'result') plugin('App').exitApp();
+      else if (screen === 'quiz') { if (state.paused) withInterstitial(resumePlay); else pause(); }
+      else withInterstitial(renderTitle);
+    });
+  }
+
+  // ---------- リワード広告のチート：まちがえた問題をやり直す（アプリのみ・1 ゲーム 3 回まで） ----------
+  // 2 択の同じ問題をやり直すと答えがわかってしまうので、同じ難易度の別の問題に差し替える。
+  // 正解・不正解と解説を見届けられるよう少し待ってから案内を出し、数秒で自動的に消す
+  const REDO_DELAY = 2500;
+  const REDO_WAIT = 8;
+  const REDO_MAX = 3;
+  const redo = { timer: null, tick: null, busy: false, left: 0 };
+
+  function offerRedo() {
+    if (!Ads.canReward || state.redoUsed >= REDO_MAX) return;
+    const index = state.index;
+    redo.timer = setTimeout(() => {
+      if (state.index === index && state.answered) showRedo();
+    }, REDO_DELAY);
+  }
+  function showRedo() {
+    Object.assign(redo, { busy: false, left: REDO_WAIT });
+    $('redo-note').textContent = t('redoNote', { n: REDO_MAX - state.redoUsed });
+    $('redo-watch').disabled = false;
+    $('redo-watch').textContent = t('redoWatch');
+    $('redo-skip').textContent = t('redoSkip', { s: redo.left });
+    $('redo').hidden = false;
+    redo.tick = setInterval(() => {
+      if (state.paused || redo.busy) return;
+      redo.left--;
+      $('redo-skip').textContent = t('redoSkip', { s: Math.max(0, redo.left) });
+      if (redo.left <= 0) closeRedo();
+    }, 1000);
+  }
+  function closeRedo() {
+    clearTimeout(redo.timer);
+    clearInterval(redo.tick);
+    redo.timer = redo.tick = null;
+    $('redo').hidden = true;
+  }
+  $('redo-skip').addEventListener('click', () => { Sound.play('tap'); closeRedo(); });
+  $('redo-watch').addEventListener('click', async () => {
+    if (redo.busy || $('redo').hidden) return;
+    redo.busy = true;
+    $('redo-watch').disabled = true;
+    $('redo-watch').textContent = t('redoLoading');
+    const result = await Ads.showRewarded();
+    if (result === 'unavailable') {
+      $('redo-note').textContent = t('redoFail');
+      setTimeout(closeRedo, 2000);
+      return;
+    }
+    closeRedo();
+    if (result !== 'rewarded') return;
+    // まちがえた問題の成績（不正解・タイム・連続正解の途切れ）を取り消して、別の問題でやり直す
+    const q = state.list[state.index];
+    state.misses.pop();
+    state.marks.pop();
+    state.time -= state.qTime;
+    state.combo = state.prevCombo;
+    state.redoUsed++;
+    state.list[state.index] = replacementFor(q.pair);
+    renderQuestion();
+    const line = t('redoLine');
+    $('question').innerHTML = line + $('question').innerHTML;
+    say($('question').textContent);
+  });
+
+  // 差し替える問題：まだ出ていない、同じジャンル・同じ難易度の組（なければ難易度を問わない）
+  function replacementFor(pair) {
+    const used = new Set(state.list.map((x) => x.pair.id));
+    const pool = poolOf(state.genre).filter((p) => !used.has(p.id));
+    const same = pool.filter((p) => p.level === pair.level);
+    const next = pick(same.length ? same : pool.length ? pool : FISH_PAIRS.filter((p) => p.id !== pair.id));
+    return { pair: next, options: shuffle([next.a, next.b]), answer: Math.random() < 0.5 ? 0 : 1 };
+  }
+
+  // ---------- タイトル画面の下：バージョン（アプリ版）・プライバシーポリシー・広告の設定（EU など） ----------
+  if (window.APP_VERSION && window.APP_VERSION !== 'dev') $('build-info').textContent = `${window.APP_VERSION} |`;
+  Ads.initDone.then(() => { if (Ads.privacyOptionsRequired) $('ad-privacy').hidden = false; });
+  $('ad-privacy-link').addEventListener('click', (e) => { e.preventDefault(); Ads.showPrivacyOptions(); });
+  // アプリの WebView では音声読み上げが使えないので「声」ボタンを隠す
+  $('tg-voice').hidden = !Sound.hasVoice;
+
   I18N.apply();
+  $('privacy-link').href = t('privacyUrl');
   renderTitle();
 })();
