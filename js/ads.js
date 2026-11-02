@@ -13,7 +13,7 @@ window.Ads = (() => {
       },
       // 本番の広告ユニット(AdMob の Android アプリ「魚仕分け」)。空の種類はまだ届いていない
       production: {
-        interstitial: '',
+        interstitial: 'ca-app-pub-6411535997477460/9739740639',
         rewarded: '',
         banner: 'ca-app-pub-6411535997477460/1681287217',
       },
