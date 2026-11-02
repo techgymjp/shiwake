@@ -1,0 +1,43 @@
+Fish Shiwake - English source text for machine translation (Google Play store listing)
+
+This version uses short, plain sentences without idioms or slang, so that automatic translation
+into other languages stays accurate. Keep the game name "Fish Shiwake" untranslated.
+
+[App name] (max 30 characters)
+Fish Shiwake: Fish ID Quiz
+
+[Short description] (max 80 characters)
+Two fish look almost the same. Choose the right one. A quiz with 100 pairs.
+
+[Full description] (max 4000 characters)
+A sushi chef asks you for a fish. Two fish that look almost the same appear on the screen. Choose the fish that the chef asked for.
+For example: olive flounder or righteye flounder? Conger eel or freshwater eel? Bluefin tuna or skipjack tuna?
+Look carefully at the pictures and find the differences.
+
+■ 100 PAIRS OF FISH
+• There are 145 kinds of fish and sea animals in 100 pairs.
+• There are four categories: sushi and market fish, fish of the coast, fish of rivers and ponds, and squid, shrimp and shellfish.
+• You can choose one category or play with all of them.
+• One game has 10 questions. The questions start easy and become harder.
+
+■ LEARN HOW TO TELL THEM APART
+• After each answer, the game shows a short tip. The tip explains the difference between the two fish.
+• For example, the red sea bream has a black edge on its tail fin.
+• You can read all 100 tips in the Fish Guide at any time.
+
+■ PLAY WITH THE SUSHI CHEF
+• The chef gives you orders. He is happy when you are right. He makes a joke when you are wrong.
+• If you answer correctly many times in a row, you get a combo.
+• You get a title at the end of the game. The best title is "Master Fish-Spotter".
+
+■ RANKING AND SHARING
+• The game saves a ranking for each category on your device. The ranking uses the number of correct answers and the time.
+• You can share your result with your friends.
+• If you make a mistake, you can watch an ad. Then you get a different question instead. You can do this up to 3 times in one game.
+
+■ OTHER FEATURES
+• Colorful design, sound effects and music
+• You can play without an internet connection. Ads and sharing need a connection.
+• English and Japanese
+
+Become a fish expert!

@@ -715,3 +715,11 @@ body.has-banner #app { padding-bottom: 80px; }
 .legal { margin: 18px 0 0; font-size: .8rem; font-weight: 800; color: var(--muted); }
 .legal a { color: var(--ink); }
 .share-btn[hidden] { display: none; }
+
+/* 幅の狭いスマホでも上部の表示がつぶれないように折り返す */
+.status { flex-wrap: wrap; align-items: center; }
+.chip { white-space: nowrap; }
+@media (max-width: 400px) {
+  .status { gap: 5px; }
+  .chip { padding: 2px 8px; font-size: .85rem; }
+}

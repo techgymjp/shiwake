@@ -95,6 +95,7 @@ AdMob のアプリ ID は `android/app/src/main/res/values/strings.xml` の `adm
 
 手元で試すとき: `npm install` → `npm run android:sync` → `npm run android:open`（Android Studio が必要）。
 アイコンと起動画面は `assets/` の元画像から `npx @capacitor/assets generate --android` で生成しています。
+Google Play のストア掲載情報（日英の紹介文・アイコン・フィーチャーグラフィック・スクリーンショット）は `docs/store/` にあります。
 
 ## ライセンス
 
