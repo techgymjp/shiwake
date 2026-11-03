@@ -45,6 +45,8 @@
 - `js/ads.js` … 広告（Android アプリのときだけ動く）
 - `js/ads-config.js`・`js/build-info.js` … 広告のモードとバージョン表示（アプリのビルド時に生成し直す）
 - `android/` … Android アプリのプロジェクト（Capacitor）
+- `ios/` … iOS アプリのプロジェクト（Capacitor）
+- `docs/IOS_BUILD.md` … iOS 版を Mac でビルドして App Store に出す手順
 - `assets/` … アプリのアイコンと起動画面の元画像
 - `js/game.js` … ゲーム進行・大将のセリフ
 
@@ -96,6 +98,19 @@ AdMob のアプリ ID は `android/app/src/main/res/values/strings.xml` の `adm
 手元で試すとき: `npm install` → `npm run android:sync` → `npm run android:open`（Android Studio が必要）。
 アイコンと起動画面は `assets/` の元画像から `npx @capacitor/assets generate --android` で生成しています。
 Google Play のストア掲載情報（日英の紹介文・アイコン・フィーチャーグラフィック・スクリーンショット）は `docs/store/` にあります。
+
+## iOS アプリ
+
+Android 版と同じ Capacitor のプロジェクトに `ios/` を足して作っています。構成は techgymjp/jet-fighter（JET STRIKE）・techgymjp/shutoko と同じです。
+
+- Bundle ID: `jp.techgym.shiwake`（Android と同じ）、iPhone 専用・縦画面固定・全画面・プレイ中は画面を消さない
+- アプリ名はホーム画面で「魚仕分け」（英語の端末では Fish Shiwake）
+- カメラの切り欠き（Dynamic Island）とホームバーに重ならないよう、画面の上下に余白を取る（`viewport-fit=cover` と `env(safe-area-inset-*)`）
+- 広告は Android と同じルール。起動時に App Tracking Transparency の確認を出す。iOS では大将の声（読み上げ）も使える
+- AdMob の iOS 用の ID は `ios/App/App/Info.plist`（アプリ ID）と `js/ads.js` の `UNITS.ios.production`（広告ユニット）。届くまでは Google 公式のテスト用 ID
+- GitHub Actions: `.github/workflows/ios.yml` で push のたびに Xcode でビルドできるかを確認（署名なし）、`.github/workflows/ios-release.yml` で本番広告の設定でビルドして TestFlight にアップロード（ビルド番号は実行回数 + 100。Secrets を登録するまでは何もしない）
+- ビルドと App Store への提出は Mac の Xcode で行う。手順は `docs/IOS_BUILD.md`
+- App Store 用の掲載情報と画像は `docs/store/ios/`（スクリーンショット 1206×2622〔縦〕日英各 4 枚、ヘッダ 3840×1646、検索結果 3840×2560）
 
 ## ライセンス
 

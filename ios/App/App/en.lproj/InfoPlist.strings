@@ -1,0 +1,4 @@
+/* Home screen name on English devices */
+"CFBundleDisplayName" = "Fish Shiwake";
+/* App Tracking Transparency prompt */
+"NSUserTrackingUsageDescription" = "This identifier is used to show you more relevant ads. The game is free thanks to ads.";

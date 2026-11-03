@@ -723,3 +723,16 @@ body.has-banner #app { padding-bottom: 80px; }
   .status { gap: 5px; }
   .chip { padding: 2px 8px; font-size: .85rem; }
 }
+
+/* iPhone のカメラ部分（Dynamic Island）とホームバーに重ならないよう、上下に安全な余白を取る
+   （端末に切り欠きがなければ env() は 0 なので、Web 版の見た目は変わらない） */
+.sound-toggles {
+  top: calc(10px + env(safe-area-inset-top, 0px));
+  right: calc(10px + env(safe-area-inset-right, 0px));
+}
+#app {
+  padding-top: calc(56px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+}
+.noren { margin-top: calc(-56px - env(safe-area-inset-top, 0px)); }
+body.has-banner #app { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
