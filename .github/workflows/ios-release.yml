@@ -97,7 +97,9 @@ jobs:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
         run: |
-          export PROFILE_NAME="$(python3 scripts/ios_profile.py)"
+          # export と同じ行に書くと、スクリプトが失敗しても止まらないので分けて書く
+          PROFILE_NAME="$(python3 scripts/ios_profile.py)"
+          export PROFILE_NAME
           echo "PROFILE_NAME=$PROFILE_NAME" >> "$GITHUB_ENV"
           # アプリ本体の Release だけを手動署名 (配布用の証明書とプロファイル) にする
           python3 - <<'PY'
@@ -117,6 +119,8 @@ jobs:
         if: env.HAS_ASC == 'true'
         working-directory: ios/App
         run: |
+          # | tail で出力を短くしても、xcodebuild が失敗したらこのステップを失敗にする
+          set -o pipefail
           xcodebuild -project App.xcodeproj -scheme App -configuration Release \
             -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/App.xcarchive" \
             CURRENT_PROJECT_VERSION="$VERSION_CODE" MARKETING_VERSION="$VERSION_NAME" \
