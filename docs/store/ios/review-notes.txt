@@ -1,0 +1,50 @@
+魚仕分け（Fish Shiwake）- App Store 審査用のメモ
+
+App Store Connect の「配信」タブ →「App Review に関する情報」に入れます。
+初回の審査で「Guideline 2.1 - Information Needed」が来たら、下の「メモ」と同じ文を返信し、
+実機での操作の画面録画（アプリの起動から 2〜3 分。docs/IOS_BUILD.md の 4 章）を添付します。
+
+====================================================================
+■ サインイン情報
+====================================================================
+
+「サインインが必要です」のチェックを外す（ログイン・アカウントは不要）
+
+====================================================================
+■ 連絡先情報
+====================================================================
+
+名前・電話番号・メールアドレス：審査担当者から連絡を受ける人の情報を入れる
+
+====================================================================
+■ メモ（ここから下をそのまま貼る）
+====================================================================
+
+1. Purpose and audience: Fish Shiwake is a free quiz game for ages 4+. A sushi chef asks for a fish, and the player picks the right one from two look-alike fish (for example, olive flounder vs. righteye flounder). After each answer, a short tip explains how to tell them apart. There are 100 pairs, and a Fish Guide lists all of them.
+
+2. How to use: No login or account is needed. Choose a category on the title screen and tap "板場に立つ！" (Start). Tap the fish that the chef asked for. The game supports English and Japanese: tap "English" at the top right to switch the language.
+
+3. External services: Google AdMob (banner, interstitial and rewarded ads) with Google's consent form (UMP) and App Tracking Transparency. Rewarded ads are optional: after a wrong answer, watching one lets the player retry with a different question (up to 3 times per game). No other services or in-app purchases.
+
+4. Regional differences: None, except that the ad consent form appears only where required (e.g. EEA/UK).
+
+5. Regulated content / third-party material: The game is not in a regulated industry. All illustrations, sounds and text are original.
+
+====================================================================
+■ 「Guideline 2.1 - Information Needed」が来たときの返信（ひな形）
+====================================================================
+
+Hello,
+
+Thank you for reviewing Fish Shiwake. Please find the requested information below, and a screen recording of the app on a physical iPhone attached (starting from app launch).
+
+（ここに上の「メモ」の 1〜5 を貼る）
+
+Best regards,
+（名前）
+
+--------------------------------------------------------------------
+・録画は返信に添付する（メモの文には録画のことは書かない）
+・録画で本番の広告が出ても、タップしない（広告が閉じるまで待つ）
+・動画が大きすぎて送れないときは、Mac の Finder で右クリック →「選択したビデオファイルをエンコード」→ 720p
+  で小さくするか、Google ドライブの共有リンクを返信文に貼る
