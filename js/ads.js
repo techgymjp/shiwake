@@ -24,11 +24,11 @@ window.Ads = (() => {
         rewarded: 'ca-app-pub-3940256099942544/1712485313',
         banner: 'ca-app-pub-3940256099942544/2934735716',
       },
-      // 本番の広告ユニット(AdMob の iOS アプリ「魚仕分け」)。届いたら入れる
+      // 本番の広告ユニット(AdMob の iOS アプリ「魚仕分け」)。空の種類はまだ届いていない
       production: {
         interstitial: '',
         rewarded: '',
-        banner: '',
+        banner: 'ca-app-pub-6411535997477460/3863813607',
       },
     },
   };
