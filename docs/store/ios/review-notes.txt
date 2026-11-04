@@ -1,8 +1,8 @@
 魚仕分け（Fish Shiwake）- App Store 審査用のメモ
 
 App Store Connect の「配信」タブ →「App Review に関する情報」に入れます。
-初回の審査で「Guideline 2.1 - Information Needed」が来たら、下の「メモ」と同じ文を返信し、
-実機での操作の画面録画（アプリの起動から 2〜3 分。docs/IOS_BUILD.md の 4 章）を添付します。
+初回の審査で「Guideline 2.1 - Information Needed」が来たら、下の「メモ」と同じ文を返信します（実機の画面録画の添付は不要）。
+6 と 7 は、デザインスパム（Guideline 4.3）と最低限の機能（Guideline 4.2）への先回りの説明です。
 
 ====================================================================
 ■ サインイン情報
@@ -30,21 +30,19 @@ App Store Connect の「配信」タブ →「App Review に関する情報」�
 
 5. Regulated content / third-party material: The game is not in a regulated industry. All illustrations, sounds and text are original.
 
+6. Uniqueness (Guideline 4.3): Fish Shiwake is an original, standalone game, not a template or a re-skin of another app. Its concept (a two-choice fish identification quiz hosted by a sushi chef) is different in genre from our other apps. All 145 fish illustrations and the 100 "how to tell them apart" tips were created specifically for this app.
+
+7. App functionality (Guideline 4.2): The app is not a website wrapper. All game content (code, illustrations, sounds and texts for 100 pairs) is bundled in the app and fully playable offline. It also uses native iOS features such as the share sheet and App Tracking Transparency.
+
 ====================================================================
 ■ 「Guideline 2.1 - Information Needed」が来たときの返信（ひな形）
 ====================================================================
 
 Hello,
 
-Thank you for reviewing Fish Shiwake. Please find the requested information below, and a screen recording of the app on a physical iPhone attached (starting from app launch).
+Thank you for reviewing Fish Shiwake. Please find the requested information below.
 
-（ここに上の「メモ」の 1〜5 を貼る）
+（ここに上の「メモ」の 1〜7 を貼る）
 
 Best regards,
 （名前）
-
---------------------------------------------------------------------
-・録画は返信に添付する（メモの文には録画のことは書かない）
-・録画で本番の広告が出ても、タップしない（広告が閉じるまで待つ）
-・動画が大きすぎて送れないときは、Mac の Finder で右クリック →「選択したビデオファイルをエンコード」→ 720p
-  で小さくするか、Google ドライブの共有リンクを返信文に貼る

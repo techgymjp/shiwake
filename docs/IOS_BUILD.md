@@ -92,15 +92,11 @@ npm run ios:open
 
 ---
 
-## 4. TestFlight で確認し、審査用の録画を撮る
+## 4. TestFlight で確認する
 
 1. App Store Connect の「TestFlight」→「内部テスト」でグループを作り、自分を追加する
 2. iPhone に「TestFlight」アプリを App Store から入れ、届いた招待から魚仕分けをインストールする
-3. **審査用の画面録画を撮る**（新しいアカウントは、最初の審査で実機での操作の録画を求められます。先に用意しておくと早い）
-   - iPhone の「設定」→「コントロールセンター」に「画面収録」を追加し、コントロールセンターから録画を始める
-   - **アプリの起動から**撮る：起動 → トラッキングの確認 → タイトル（ジャンル選び）→ 問題に何問か答える（1 問はわざとまちがえる）→ 一時停止と再開 → 結果画面 → シェア → 見分け図鑑 → ランキング
-   - 本番広告が出ても**タップしない**。広告が閉じるまで待つ
-   - 2〜3 分に収める。大きすぎて送れないときは、Mac の Finder で右クリック →「選択したビデオファイルをエンコード」→ 720p で小さくするか、Google ドライブの共有リンクを使う
+3. 2 章と同じ項目を確認する（本番の広告が出るので、**広告はタップしない**。広告が閉じるまで待つ）
 
 ---
 
@@ -133,7 +129,7 @@ Google の「Apple の App Store のデータ開示要件への準備」（AdMob
 - トラッキングに使用：デバイス ID と広告データは「する」
 - アプリ自体は個人情報を集めない（板前の名前・ランキング・ベストスコアは端末の中だけに保存）
 
-**審査へのメモ（App Review に関する情報の「メモ」に貼る。初回に「Guideline 2.1 - Information Needed」が来たら、同じ文を返信し、4 章で撮った録画を添付する）**
+**審査へのメモ（App Review に関する情報の「メモ」に貼る。初回に「Guideline 2.1 - Information Needed」が来たら、同じ文を返信する。実機の画面録画の添付は不要。6・7 はデザインスパム〔4.3〕と最低限の機能〔4.2〕への先回りの説明）**
 
 `docs/store/ios/review-notes.txt` に、このメモと 2.1 が来たときの返信のひな形をまとめてあります。
 
@@ -147,6 +143,10 @@ Google の「Apple の App Store のデータ開示要件への準備」（AdMob
 4. Regional differences: None, except that the ad consent form appears only where required (e.g. EEA/UK).
 
 5. Regulated content / third-party material: The game is not in a regulated industry. All illustrations, sounds and text are original.
+
+6. Uniqueness (Guideline 4.3): Fish Shiwake is an original, standalone game, not a template or a re-skin of another app. Its concept (a two-choice fish identification quiz hosted by a sushi chef) is different in genre from our other apps. All 145 fish illustrations and the 100 "how to tell them apart" tips were created specifically for this app.
+
+7. App functionality (Guideline 4.2): The app is not a website wrapper. All game content (code, illustrations, sounds and texts for 100 pairs) is bundled in the app and fully playable offline. It also uses native iOS features such as the share sheet and App Tracking Transparency.
 ```
 
 入力が終わったら「審査用に追加」→「審査へ提出」。
