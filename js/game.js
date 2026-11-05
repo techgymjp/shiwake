@@ -715,6 +715,8 @@
   if (window.APP_VERSION && window.APP_VERSION !== 'dev') $('build-info').textContent = `${window.APP_VERSION} |`;
   Ads.initDone.then(() => { if (Ads.privacyOptionsRequired) $('ad-privacy').hidden = false; });
   $('ad-privacy-link').addEventListener('click', (e) => { e.preventDefault(); Ads.showPrivacyOptions(); });
+  // Google Play へのリンクは Web 版だけ（アプリの中では出さない）
+  $('store-link').parentElement.hidden = NATIVE;
   // アプリの WebView では音声読み上げが使えないので「声」ボタンを隠す
   $('tg-voice').hidden = !Sound.hasVoice;
 

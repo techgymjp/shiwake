@@ -736,3 +736,20 @@ body.has-banner #app { padding-bottom: 80px; }
 }
 .noren { margin-top: calc(-56px - env(safe-area-inset-top, 0px)); }
 body.has-banner #app { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+
+/* Web 版のタイトル画面の Google Play へのリンク */
+.store-link-wrap { margin: 6px 0 0; }
+.store-link-wrap[hidden] { display: none; }
+.store-link {
+  display: inline-block;
+  font-weight: 900;
+  font-size: .95rem;
+  color: var(--ink);
+  padding: 6px 16px;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 3px 3px 0 var(--ink);
+  text-decoration: none;
+}
+.store-link:hover { transform: translate(-1px, -2px); }
