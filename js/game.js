@@ -366,13 +366,14 @@
     shareText = t('shareText', { g: I18N.genreLabel(genre), s: state.score, t: state.list.length, time: fmtTime(state.time) + redoNote, title: rank.title, marks });
     const url = shareUrl();
     const enc = encodeURIComponent;
+    // web-only:start（X・LINE・Facebook のボタンは Web 版だけ。アプリには入れない：scripts/build-web.js が消す）
     $('share-x').href = `https://twitter.com/intent/tweet?text=${enc(shareText)}&url=${enc(url)}&hashtags=${enc(t('hashtag'))}`;
     $('share-line').href = `https://line.me/R/msg/text/?${enc(`${shareText}\n${url}`)}`;
     $('share-fb').href = `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`;
-    // アプリでは Android の共有メニューを使う（X・LINE・Facebook のリンクは出さない）
+    // web-only:end
+    // アプリでは端末の共有メニューを使う
     $('share-native').hidden = !(NATIVE || navigator.share);
     $('share-native').textContent = t(NATIVE ? 'shareApp' : 'shareMore');
-    ['share-x', 'share-line', 'share-fb'].forEach((id) => { $(id).hidden = NATIVE; });
     $('share-toast').textContent = '';
   }
 
@@ -410,7 +411,9 @@
     } catch { /* キャンセルされたときは何もしない */ }
   }
 
+  // web-only:start
   ['share-x', 'share-line', 'share-fb'].forEach((id) => $(id).addEventListener('click', () => Sound.play('tap')));
+  // web-only:end
   $('share-copy').addEventListener('click', () => { Sound.play('tap'); copyShare(); });
   $('share-native').addEventListener('click', () => { Sound.play('tap'); nativeShare(); });
 
@@ -715,8 +718,6 @@
   if (window.APP_VERSION && window.APP_VERSION !== 'dev') $('build-info').textContent = `${window.APP_VERSION} |`;
   Ads.initDone.then(() => { if (Ads.privacyOptionsRequired) $('ad-privacy').hidden = false; });
   $('ad-privacy-link').addEventListener('click', (e) => { e.preventDefault(); Ads.showPrivacyOptions(); });
-  // Google Play へのリンクは Web 版だけ（アプリの中では出さない）
-  $('store-link').parentElement.hidden = NATIVE;
   // アプリの WebView では音声読み上げが使えないので「声」ボタンを隠す
   $('tg-voice').hidden = !Sound.hasVoice;
 

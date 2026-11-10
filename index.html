@@ -53,8 +53,9 @@
         <button class="btn" id="btn-zukan" data-i18n="zukanBtn">📖 見分け図鑑</button>
       </div>
       <p class="best" id="best-score"></p>
-      <!-- Web 版だけに出す Google Play へのリンク（アプリ版では js/game.js で隠す） -->
+      <!-- web-only: Google Play へのリンク。Web 版だけ。アプリには入れない（scripts/build-web.js が消す） -->
       <p class="store-link-wrap"><a class="store-link" id="store-link" href="https://play.google.com/store/apps/details?id=jp.techgym.shiwake" target="_blank" rel="noopener" data-i18n="storeLink">📱 Android アプリ版（Google Play）</a></p>
+      <!-- /web-only -->
       <p class="legal" id="legal">
         <span id="build-info"></span>
         <a href="https://techgym.jp/privacy-policy/" id="privacy-link" target="_blank" rel="noopener" data-i18n="privacy">プライバシーポリシー</a>
@@ -110,9 +111,11 @@
         <p class="share-title" data-i18n="shareTitle">結果をシェアする</p>
         <p class="share-marks" id="share-marks"></p>
         <div class="share-buttons">
+          <!-- web-only: X・LINE・Facebook のボタン。アプリでは端末の共有メニューを使う（scripts/build-web.js が消す） -->
           <a class="share-btn x" id="share-x" href="#" target="_blank" rel="noopener" data-i18n="sharePost">𝕏 ポスト</a>
           <a class="share-btn line" id="share-line" href="#" target="_blank" rel="noopener">LINE</a>
           <a class="share-btn fb" id="share-fb" href="#" target="_blank" rel="noopener">Facebook</a>
+          <!-- /web-only -->
           <button type="button" class="share-btn more" id="share-native" hidden data-i18n="shareMore">📤 その他</button>
           <button type="button" class="share-btn copy" id="share-copy" data-i18n="shareCopy">🔗 コピー</button>
         </div>

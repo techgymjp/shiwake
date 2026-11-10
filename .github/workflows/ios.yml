@@ -39,7 +39,7 @@ jobs:
 
       - name: Copy web assets into the iOS project
         run: |
-          npm run build
+          npm run build:app
           npx cap sync ios
 
       # | tail で出力を短くしても、xcodebuild が失敗したらこのステップを失敗にする

@@ -83,7 +83,7 @@
 
 ビルドは GitHub Actions（`.github/workflows/android.yml`）で行います。
 
-1. `npm ci` → `npm run build`（`www/` に Web ファイルをコピーし、`js/ads-config.js` と `js/build-info.js` を生成）→ `npx cap sync android` → `./gradlew assembleDebug`
+1. `npm ci` → `npm run build:app`（`www/` に Web ファイルをコピーし、`js/ads-config.js` と `js/build-info.js` を生成。Web 版だけの部分は取り除く。下記）→ `npx cap sync android` → `./gradlew assembleDebug`
 2. 既定ブランチなら、Release `android-latest` の `shiwake.apk` を差し替え（動作確認用・テスト広告）
    - リリース画面: https://github.com/techgymjp/shiwake/releases/tag/android-latest
    - APK 直接: https://github.com/techgymjp/shiwake/releases/latest/download/shiwake.apk
@@ -96,6 +96,12 @@ AdMob のアプリ ID は `android/app/src/main/res/values/strings.xml` の `adm
 動作確認用 APK はどれもテスト広告、Google Play 用の AAB は本番の広告です（広告ユニット ID が空の種類は出さない）。
 
 手元で試すとき: `npm install` → `npm run android:sync` → `npm run android:open`（Android Studio が必要）。
+
+**Web 版だけの部分はアプリに入れない**：Google Play へのリンクと、結果画面の X・LINE・Facebook のボタンは Web 版だけのものです。
+`index.html` では `<!-- web-only -->` 〜 `<!-- /web-only -->`、`js/game.js`・`js/i18n.js` では `// web-only:start` 〜 `// web-only:end` で囲んであり、
+アプリ用のビルド（`npm run build:app`。`android:sync`・`ios:sync`・`ios:release` と GitHub Actions はこれを使う）で取り除きます。
+取り除いたあとに Google Play などへのリンクが残っていたら、ビルドが止まります。
+アプリの中で隠しているだけの機能は、iOS の審査で「審査中に隠した機能」（Guideline 5.6）と見なされるためです。Web 版だけの部分を足すときは、必ずこの目印で囲んでください。
 アイコンと起動画面は `assets/` の元画像から `npx @capacitor/assets generate --android` で生成しています。
 Google Play のストア掲載情報（日英の紹介文・アイコン・フィーチャーグラフィック・スクリーンショット）は `docs/store/` にあります。
 

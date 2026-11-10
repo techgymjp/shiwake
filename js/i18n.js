@@ -56,7 +56,9 @@ const I18N = (() => {
       bgm: '♪ BGM',
       se: '🔔 効果音',
       voice: '🗣 声',
+      // web-only:start
       storeLink: '📱 Android アプリ版（Google Play）',
+      // web-only:end
       privacy: 'プライバシーポリシー',
       privacyUrl: 'https://techgym.jp/privacy-policy/',
       adSettings: '広告の設定',
@@ -140,7 +142,9 @@ const I18N = (() => {
       bgm: '♪ BGM',
       se: '🔔 SFX',
       voice: '🗣 Voice',
+      // web-only:start
       storeLink: '📱 Get the Android app on Google Play',
+      // web-only:end
       privacy: 'Privacy Policy',
       privacyUrl: 'https://techgym.jp/privacy-policy-en/',
       adSettings: 'Ad settings',
