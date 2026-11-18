@@ -33,6 +33,9 @@
         </provider>
     </application>
 
+    <!-- 画面は縦に固定しているが、縦画面のハードウェアは必須ではない（縦向きにできない端末でもインストールできるようにする） -->
+    <uses-feature android:name="android.hardware.screen.portrait" android:required="false" />
+
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
