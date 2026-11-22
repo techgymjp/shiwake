@@ -27,7 +27,7 @@ window.Ads = (() => {
       // 本番の広告ユニット(AdMob の iOS アプリ「魚仕分け」)
       production: {
         interstitial: 'ca-app-pub-6411535997477460/1481180508',
-        rewarded: 'ca-app-pub-6411535997477460/9071521218',
+        rewarded: 'ca-app-pub-6411535997477460/9784718495',
         banner: 'ca-app-pub-6411535997477460/3279019897',
       },
     },
