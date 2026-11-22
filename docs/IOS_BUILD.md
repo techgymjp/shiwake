@@ -144,7 +144,7 @@ Google の「Apple の App Store のデータ開示要件への準備」（AdMob
 
 5. Regulated content / third-party material: The game is not in a regulated industry. All illustrations, sounds and text are original.
 
-6. Originality (Guideline 4.3): Fish Shiwake is an original app that we designed and built ourselves. It does not copy or imitate any other app, and it is not made from a template, a purchased source code or a re-skin of another game. All 145 fish illustrations and the 100 "how to tell them apart" tips were created specifically for this app.
+6. Originality (Guideline 4.3): Fish Shiwake is an original app that we designed and built ourselves. It does not copy or imitate any other app, and it is not made from a template, a purchased source code or a re-skin of another game. The quiz format (a sushi chef orders a fish and the player picks it from two look-alikes) and all of its content were created specifically for this app: 145 fish illustrations, each drawn to show the feature that tells it apart from its look-alike; 100 hand-written "how to tell them apart" tips in English and Japanese; and a sushi chef host character with his own lines and reactions.
 
 7. App functionality (Guideline 4.2): The app is not a website wrapper. All game content (code, illustrations, sounds and texts for 100 pairs) is bundled in the app and fully playable offline. It also uses native iOS features such as the share sheet and App Tracking Transparency.
 ```
