@@ -132,6 +132,7 @@ Google の「Apple の App Store のデータ開示要件への準備」（AdMob
 **審査へのメモ（App Review に関する情報の「メモ」に貼る。初回に「Guideline 2.1 - Information Needed」が来たら、同じ文を返信する。実機の画面録画の添付は不要。6・7 はデザインスパム〔4.3〕と最低限の機能〔4.2〕への先回りの説明）**
 
 `docs/store/ios/review-notes.txt` に、このメモと 2.1 が来たときの返信のひな形をまとめてあります。
+4.3（デザインスパム）に絞ったメモは `docs/store/ios/review-notes-4.3.txt` にあります（4.3 でリジェクトされたあとの再提出や返信に使う）。
 
 ```
 1. Purpose and audience: Fish Shiwake is a free quiz game for ages 4+. A sushi chef asks for a fish, and the player picks the right one from two look-alike fish (for example, olive flounder vs. righteye flounder). After each answer, a short tip explains how to tell them apart. There are 100 pairs, and a Fish Guide lists all of them.

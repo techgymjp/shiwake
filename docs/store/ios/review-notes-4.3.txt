@@ -1,0 +1,40 @@
+魚仕分け（Fish Shiwake）- App Store 審査用のメモ（Guideline 4.3 Design - Spam に特化した版）
+
+使い方
+- App Store Connect の「配信」タブ →「App Review に関する情報」→「メモ」に、下の英文をそのまま貼る
+- 4.3 でリジェクトされたあと再提出するときや、App Review への返信にも、同じ文を使える
+- ほかのアプリと比べる書き方はせず、このアプリがオリジナルで、このアプリのために作った中身と、遊ぶ人にとっての価値があることを伝える
+- 「サインインが必要です」のチェックは外す（ログイン不要）
+
+====================================================================
+■ メモ（ここから下をそのまま貼る）
+====================================================================
+
+Notes for App Review - Guideline 4.3 (Design - Spam)
+
+Fish Shiwake is an original app that we designed and built ourselves for one purpose: helping people learn to tell look-alike fish apart. It is not a copy of another app, and it is not made from a template, a purchased source code or a re-skin of another game.
+
+1. Original concept
+A sushi chef orders a fish, and the player picks it from two look-alike fish, such as olive flounder vs. righteye flounder, conger eel vs. freshwater eel, or bluefin tuna vs. skipjack tuna. We designed this quiz format ourselves, and the app was built from scratch for it.
+
+2. Content created only for this app
+- 145 fish and sea creature illustrations. Each one is drawn to show the feature that tells it apart from its look-alike (spots, stripes, fin shapes, jaw shapes, barbels and so on).
+- 100 pairs of look-alikes, each with a hand-written "how to tell them apart" tip in English and Japanese.
+- 4 categories (sushi and market fish, coastal fish, river and pond fish, squid/shrimp/shellfish) and 3 difficulty levels. Each game goes from easy to hard.
+- A sushi chef host character with his own lines, reactions to correct and wrong answers, combo comments and end-of-game titles.
+- Music and sound effects made for this app.
+
+3. Value for players
+- After every answer, a tip explains the difference between the two fish, so players learn while they play.
+- The Fish Guide lists all 100 pairs with their tips, by category.
+- After each game, players can review the fish they got wrong.
+- A ranking for each category (correct answers and time) is saved on the device.
+- The app works fully offline and supports English and Japanese.
+
+4. A single app
+Fish Shiwake is a single app with its own Bundle ID. We have not submitted other versions or variations of this app.
+
+Other information
+- No login or account is needed. Choose a category on the title screen and tap "板場に立つ！" (Start). Tap "English" at the top right to switch the language.
+- Ads: Google AdMob (banner, interstitial and rewarded) with Google's consent form (UMP) and App Tracking Transparency. Rewarded ads are optional: after a wrong answer, watching one lets the player retry with a different question (up to 3 times per game). No in-app purchases.
+- All illustrations, sounds and text are original.
